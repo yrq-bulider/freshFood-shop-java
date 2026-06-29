@@ -1,0 +1,7 @@
+# dev profile：仅覆盖日志级别
+# 数据库连接信息继承 application.yml（密码已用 Jasypt 加密）
+# 本地开发真实密码建议放到 application-local.yml（已在 .gitignore 排除）
+
+logging:
+  level:
+    com.yan.freshfood: debug

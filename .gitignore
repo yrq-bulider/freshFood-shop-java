@@ -62,3 +62,7 @@ Thumbs.db
 *.bak.*
 *.tmp
 *.swp
+# 整目录备份
+src.bak/
+**/*.bak/
+**/src.bak/
