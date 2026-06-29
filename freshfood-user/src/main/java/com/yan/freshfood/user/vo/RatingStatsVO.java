@@ -2,6 +2,8 @@ package com.yan.freshfood.user.vo;
 
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 @Data
 public class RatingStatsVO {
     private BigDecimal average;
