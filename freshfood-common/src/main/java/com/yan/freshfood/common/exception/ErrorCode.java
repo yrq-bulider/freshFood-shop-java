@@ -20,7 +20,17 @@ public enum ErrorCode {
     MERCHANT_NOT_FOUND(7001, "商家不存在"),
     MERCHANT_PENDING(7002, "商家未通过审核"),
 
-    ADMIN_NOT_FOUND(9001, "管理员不存在");
+    ADMIN_NOT_FOUND(9001, "管理员不存在"),
+
+    PRODUCT_OFF_SHELF(3001, "商品已下架"),
+    STOCK_NOT_ENOUGH(3002, "库存不足"),
+
+    ORDER_STATUS_INVALID(4001, "订单状态不允许该操作"),
+    ORDER_NOT_FOUND(4002, "订单不存在"),
+
+    PAY_FAILED(5001, "支付失败"),
+
+    REFUND_ALREADY_EXISTS(6001, "退款申请已存在");
 
     private final int code;
     private final String message;
