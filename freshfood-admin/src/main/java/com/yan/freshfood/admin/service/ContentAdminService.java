@@ -2,9 +2,14 @@ package com.yan.freshfood.admin.service;
 
 import com.yan.freshfood.admin.dto.BannerCreateDTO;
 import com.yan.freshfood.admin.dto.BannerUpdateDTO;
+import com.yan.freshfood.admin.dto.CategoryCreateDTO;
+import com.yan.freshfood.admin.dto.CategoryStatusDTO;
+import com.yan.freshfood.admin.dto.CategoryUpdateDTO;
 import com.yan.freshfood.admin.dto.HotWordCreateDTO;
 import com.yan.freshfood.admin.dto.HotWordUpdateDTO;
 import com.yan.freshfood.admin.vo.AdminBannerVO;
+import com.yan.freshfood.admin.vo.AdminCategoryTreeVO;
+import com.yan.freshfood.admin.vo.AdminCategoryVO;
 import com.yan.freshfood.admin.vo.AdminHotWordVO;
 
 import java.util.List;
@@ -21,4 +26,12 @@ public interface ContentAdminService {
     AdminHotWordVO hotWordCreate(HotWordCreateDTO dto);
     AdminHotWordVO hotWordUpdate(Long id, HotWordUpdateDTO dto);
     void hotWordDelete(Long id);
+
+    // ----- Category -----
+    List<AdminCategoryVO> categoryList();
+    List<AdminCategoryTreeVO> categoryTree();
+    AdminCategoryVO categoryCreate(CategoryCreateDTO dto);
+    AdminCategoryVO categoryUpdate(Long id, CategoryUpdateDTO dto);
+    void categoryUpdateStatus(Long id, Integer status);
+    void categoryDelete(Long id);
 }

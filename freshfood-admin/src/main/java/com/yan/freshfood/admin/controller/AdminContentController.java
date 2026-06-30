@@ -2,10 +2,15 @@ package com.yan.freshfood.admin.controller;
 
 import com.yan.freshfood.admin.dto.BannerCreateDTO;
 import com.yan.freshfood.admin.dto.BannerUpdateDTO;
+import com.yan.freshfood.admin.dto.CategoryCreateDTO;
+import com.yan.freshfood.admin.dto.CategoryStatusDTO;
+import com.yan.freshfood.admin.dto.CategoryUpdateDTO;
 import com.yan.freshfood.admin.dto.HotWordCreateDTO;
 import com.yan.freshfood.admin.dto.HotWordUpdateDTO;
 import com.yan.freshfood.admin.service.ContentAdminService;
 import com.yan.freshfood.admin.vo.AdminBannerVO;
+import com.yan.freshfood.admin.vo.AdminCategoryTreeVO;
+import com.yan.freshfood.admin.vo.AdminCategoryVO;
 import com.yan.freshfood.admin.vo.AdminHotWordVO;
 import com.yan.freshfood.common.response.R;
 import jakarta.validation.Valid;
@@ -68,6 +73,42 @@ public class AdminContentController {
     @DeleteMapping("/hot-words/{id}")
     public R<Void> hotWordDelete(@PathVariable Long id) {
         contentAdminService.hotWordDelete(id);
+        return R.ok();
+    }
+
+    // ----- Category -----
+
+    @GetMapping("/categories")
+    public R<List<AdminCategoryVO>> categoryList() {
+        return R.ok(contentAdminService.categoryList());
+    }
+
+    @GetMapping("/categories/tree")
+    public R<List<AdminCategoryTreeVO>> categoryTree() {
+        return R.ok(contentAdminService.categoryTree());
+    }
+
+    @PostMapping("/categories")
+    public R<AdminCategoryVO> categoryCreate(@Valid @RequestBody CategoryCreateDTO dto) {
+        return R.ok(contentAdminService.categoryCreate(dto));
+    }
+
+    @PutMapping("/categories/{id}")
+    public R<AdminCategoryVO> categoryUpdate(@PathVariable Long id,
+                                              @Valid @RequestBody CategoryUpdateDTO dto) {
+        return R.ok(contentAdminService.categoryUpdate(id, dto));
+    }
+
+    @PostMapping("/categories/{id}/status")
+    public R<Void> categoryUpdateStatus(@PathVariable Long id,
+                                          @Valid @RequestBody CategoryStatusDTO dto) {
+        contentAdminService.categoryUpdateStatus(id, dto.getStatus());
+        return R.ok();
+    }
+
+    @DeleteMapping("/categories/{id}")
+    public R<Void> categoryDelete(@PathVariable Long id) {
+        contentAdminService.categoryDelete(id);
         return R.ok();
     }
 }
