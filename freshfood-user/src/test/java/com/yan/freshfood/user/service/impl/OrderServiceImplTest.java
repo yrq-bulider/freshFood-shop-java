@@ -17,7 +17,6 @@ import com.yan.freshfood.user.mapper.OrderMapper;
 import com.yan.freshfood.user.mapper.ProductMapper;
 import com.yan.freshfood.user.mapper.SkuMapper;
 import com.yan.freshfood.user.vo.OrderVO;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,6 +31,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -120,7 +120,7 @@ class OrderServiceImplTest {
             assertEquals("待付款", vo.getStatusText());
             verify(orderMapper).insert(any(OrderDO.class));
             verify(orderItemMapper).insert(any(OrderItemDO.class));
-            verify(cartMapper).delete(any(LambdaQueryWrapper.class));
+            verify(cartMapper).deleteBatchIds(anyList());
         }
     }
 
@@ -141,7 +141,7 @@ class OrderServiceImplTest {
 
             BusinessException ex = assertThrows(BusinessException.class,
                     () -> orderService.create(dto));
-            assertEquals(ErrorCode.STOCK_NOT_ENOUGH, ex.getErrorCode());
+            assertEquals(ErrorCode.STOCK_NOT_ENOUGH.getCode(), ex.getCode());
             verify(orderMapper, never()).insert(any(OrderDO.class));
         }
     }
