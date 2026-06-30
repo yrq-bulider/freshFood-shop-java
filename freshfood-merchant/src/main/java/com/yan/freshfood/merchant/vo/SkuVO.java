@@ -2,6 +2,8 @@ package com.yan.freshfood.merchant.vo;
 
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 /**
  * 商家端 SKU 返回。
  * 字段语义与 freshfood-user.vo.SkuVO 一致；为避免 merchant 依赖 user 模块，
