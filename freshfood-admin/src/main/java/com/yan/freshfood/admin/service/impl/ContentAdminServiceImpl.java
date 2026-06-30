@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.yan.freshfood.admin.dto.BannerCreateDTO;
 import com.yan.freshfood.admin.dto.BannerUpdateDTO;
 import com.yan.freshfood.admin.dto.CategoryCreateDTO;
-import com.yan.freshfood.admin.dto.CategoryStatusDTO;
 import com.yan.freshfood.admin.dto.CategoryUpdateDTO;
 import com.yan.freshfood.admin.dto.HotWordCreateDTO;
 import com.yan.freshfood.admin.dto.HotWordUpdateDTO;
