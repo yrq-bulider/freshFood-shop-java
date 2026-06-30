@@ -3,12 +3,17 @@ package com.yan.freshfood.admin.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.yan.freshfood.admin.dto.BannerCreateDTO;
 import com.yan.freshfood.admin.dto.BannerUpdateDTO;
+import com.yan.freshfood.admin.dto.HotWordCreateDTO;
+import com.yan.freshfood.admin.dto.HotWordUpdateDTO;
 import com.yan.freshfood.admin.service.ContentAdminService;
 import com.yan.freshfood.admin.vo.AdminBannerVO;
+import com.yan.freshfood.admin.vo.AdminHotWordVO;
 import com.yan.freshfood.common.exception.BusinessException;
 import com.yan.freshfood.common.exception.ErrorCode;
 import com.yan.freshfood.model.entity.product.BannerDO;
+import com.yan.freshfood.model.entity.product.HotWordDO;
 import com.yan.freshfood.user.mapper.BannerMapper;
+import com.yan.freshfood.user.mapper.HotWordMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +25,7 @@ import java.util.stream.Collectors;
 public class ContentAdminServiceImpl implements ContentAdminService {
 
     private final BannerMapper bannerMapper;
+    private final HotWordMapper hotWordMapper;
 
     @Override
     public List<AdminBannerVO> bannerList(Integer enabled) {
@@ -81,6 +87,58 @@ public class ContentAdminServiceImpl implements ContentAdminService {
         vo.setStartTime(b.getStartTime());
         vo.setEndTime(b.getEndTime());
         vo.setCreateTime(b.getCreateTime());
+        return vo;
+    }
+
+    // ----- HotWord -----
+
+    @Override
+    public List<AdminHotWordVO> hotWordList(String keyword) {
+        LambdaQueryWrapper<HotWordDO> q = new LambdaQueryWrapper<HotWordDO>()
+                .orderByAsc(HotWordDO::getSort)
+                .orderByDesc(HotWordDO::getSearchCount);
+        if (org.springframework.util.StringUtils.hasText(keyword)) {
+            q.like(HotWordDO::getKeyword, keyword);
+        }
+        List<HotWordDO> words = hotWordMapper.selectList(q);
+        return words.stream().map(this::toHotWordVO).collect(Collectors.toList());
+    }
+
+    @Override
+    public AdminHotWordVO hotWordCreate(HotWordCreateDTO dto) {
+        HotWordDO h = new HotWordDO();
+        h.setKeyword(dto.getKeyword());
+        h.setSort(dto.getSort() == null ? 0 : dto.getSort());
+        h.setSearchCount(0);
+        hotWordMapper.insert(h);
+        return toHotWordVO(h);
+    }
+
+    @Override
+    public AdminHotWordVO hotWordUpdate(Long id, HotWordUpdateDTO dto) {
+        HotWordDO h = hotWordMapper.selectById(id);
+        if (h == null) throw new BusinessException(ErrorCode.NOT_FOUND);
+        h.setKeyword(dto.getKeyword());
+        h.setSearchCount(dto.getSearchCount() == null ? 0 : dto.getSearchCount());
+        h.setSort(dto.getSort() == null ? 0 : dto.getSort());
+        hotWordMapper.updateById(h);
+        return toHotWordVO(h);
+    }
+
+    @Override
+    public void hotWordDelete(Long id) {
+        HotWordDO h = hotWordMapper.selectById(id);
+        if (h == null) throw new BusinessException(ErrorCode.NOT_FOUND);
+        hotWordMapper.deleteById(id);
+    }
+
+    private AdminHotWordVO toHotWordVO(HotWordDO h) {
+        AdminHotWordVO vo = new AdminHotWordVO();
+        vo.setId(h.getId());
+        vo.setKeyword(h.getKeyword());
+        vo.setSearchCount(h.getSearchCount());
+        vo.setSort(h.getSort());
+        vo.setCreateTime(h.getCreateTime());
         return vo;
     }
 }
