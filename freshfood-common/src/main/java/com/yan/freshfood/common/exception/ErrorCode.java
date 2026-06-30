@@ -19,6 +19,8 @@ public enum ErrorCode {
 
     MERCHANT_NOT_FOUND(7001, "商家不存在"),
     MERCHANT_PENDING(7002, "商家未通过审核"),
+    MERCHANT_AUDIT_INVALID(7003, "商家审核状态不允许此操作"),
+    CATEGORY_IN_USE(7004, "分类存在子分类或被商品引用，不可删除"),
 
     ADMIN_NOT_FOUND(9001, "管理员不存在"),
 
@@ -26,6 +28,7 @@ public enum ErrorCode {
     STOCK_NOT_ENOUGH(3002, "库存不足"),
     PRODUCT_PENDING_AUDIT(3003, "商品待审核，不可上架"),
     SKU_HAS_SALES(3004, "SKU 已有销量，不可删除"),
+    PRODUCT_AUDIT_INVALID(3005, "商品审核状态不允许此操作"),
 
     ORDER_STATUS_INVALID(4001, "订单状态不允许该操作"),
     ORDER_NOT_FOUND(4002, "订单不存在"),
