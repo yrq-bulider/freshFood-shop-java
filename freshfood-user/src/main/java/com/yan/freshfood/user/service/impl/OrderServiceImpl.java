@@ -94,7 +94,6 @@ public class OrderServiceImpl implements OrderService {
         // 构建明细并计算金额
         BigDecimal total = BigDecimal.ZERO;
         List<OrderItemVO> items = new ArrayList<>();
-        Long merchantId = null;
         for (CartDO c : myCarts) {
             SkuDO sku = skuMap.get(c.getSkuId());
             if (sku == null) {
@@ -113,7 +112,6 @@ public class OrderServiceImpl implements OrderService {
             items.add(item);
 
             total = total.add(sku.getPrice().multiply(BigDecimal.valueOf(c.getQuantity())));
-            if (merchantId == null) merchantId = sku.getProductId();
         }
 
         // 运费：满 99 免运费，否则 10
@@ -260,9 +258,8 @@ public class OrderServiceImpl implements OrderService {
         if (order == null || !order.getUserId().equals(userId)) {
             throw new BusinessException(ErrorCode.NOT_FOUND);
         }
-        // 待付款(1) 或 待发货(2) 可取消
-        if (order.getStatus() == null
-                || (order.getStatus() != 1 && order.getStatus() != 2)) {
+        // 仅待付款(1)可取消
+        if (order.getStatus() == null || order.getStatus() != 1) {
             throw new BusinessException(ErrorCode.ORDER_STATUS_INVALID);
         }
 
