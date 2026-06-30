@@ -24,6 +24,8 @@ public enum ErrorCode {
 
     PRODUCT_OFF_SHELF(3001, "商品已下架"),
     STOCK_NOT_ENOUGH(3002, "库存不足"),
+    PRODUCT_PENDING_AUDIT(3003, "商品待审核，不可上架"),
+    SKU_HAS_SALES(3004, "SKU 已有销量，不可删除"),
 
     ORDER_STATUS_INVALID(4001, "订单状态不允许该操作"),
     ORDER_NOT_FOUND(4002, "订单不存在"),
