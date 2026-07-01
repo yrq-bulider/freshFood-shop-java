@@ -1,0 +1,50 @@
+version: "3.8"
+
+# =============================================
+# 线上生鲜商场购物平台 - 本地开发环境
+# 启动：docker compose up -d
+# 停止：docker compose down
+# 重置数据：docker compose down -v
+# =============================================
+
+services:
+  mysql:
+    image: mysql:5.7
+    container_name: freshfood-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: freshfood_shop
+      TZ: Asia/Shanghai
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --default-authentication-plugin=mysql_native_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      # 自动初始化：首次启动时按顺序执行 sql/ 下所有 SQL 文件
+      - ./sql:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  adminer:
+    image: adminer:4.8.1
+    container_name: freshfood-adminer
+    restart: unless-stopped
+    ports:
+      - "8081:8080"
+    environment:
+      ADMINER_DEFAULT_SERVER: mysql
+      ADMINER_DESIGN: pepa-linha-dark
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+volumes:
+  mysql_data:
+    name: freshfood_mysql_data

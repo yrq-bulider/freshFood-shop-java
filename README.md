@@ -81,6 +81,9 @@ mysql -uroot -p freshfood_shop < sql/03_test_data.sql
 ```
 
 > 或者用 Docker 一键起 MySQL：`docker compose up -d`（参见仓库根 `docker-compose.yml`）
+> - MySQL 端口：`3306`（root/root）
+> - Adminer（Web 数据库管理）：http://localhost:8081（服务器填 `mysql`，用户名/密码 `root`/`root`）
+> - 重置数据：`docker compose down -v && docker compose up -d`
 
 ### 3. 修改数据库连接
 
