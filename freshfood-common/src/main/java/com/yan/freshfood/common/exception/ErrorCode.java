@@ -23,6 +23,9 @@ public enum ErrorCode {
     CATEGORY_IN_USE(7004, "分类存在子分类或被商品引用，不可删除"),
 
     ADMIN_NOT_FOUND(9001, "管理员不存在"),
+    ADMIN_PROTECTED(9002, "超级管理员受保护"),
+    ADMIN_SELF_OP_INVALID(9003, "不能对自己执行该操作"),
+    ADMIN_USERNAME_EXISTS(9004, "管理员用户名已存在"),
 
     PRODUCT_OFF_SHELF(3001, "商品已下架"),
     STOCK_NOT_ENOUGH(3002, "库存不足"),
