@@ -1,7 +1,7 @@
 package com.yan.freshfood.admin.service.impl;
 
+import cn.dev33.satoken.SaManager;
 import cn.dev33.satoken.secure.BCrypt;
-import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yan.freshfood.admin.service.UserAdminService;
@@ -87,6 +87,6 @@ public class UserAdminServiceImpl implements UserAdminService {
     /** 触达 StpUtil 防 NPE（admin 操作不需要校验 id 但要拿到当前 admin） */
     @SuppressWarnings("unused")
     private Long currentAdminId() {
-        return StpUtil.getStpLogic(CommonConstants.TYPE_ADMIN, null).getLoginIdAsLong();
+        return SaManager.getStpLogic(CommonConstants.TYPE_ADMIN).getLoginIdAsLong();
     }
 }

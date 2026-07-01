@@ -1,6 +1,6 @@
 package com.yan.freshfood.merchant.service.impl;
 
-import cn.dev33.satoken.stp.StpUtil;
+import cn.dev33.satoken.SaManager;
 import com.yan.freshfood.common.constant.CommonConstants;
 import com.yan.freshfood.common.exception.BusinessException;
 import com.yan.freshfood.common.exception.ErrorCode;
@@ -35,7 +35,7 @@ public class MerchantProfileServiceImpl implements MerchantProfileService {
     }
 
     private MerchantDO loadCurrent() {
-        Long mid = StpUtil.getStpLogic(CommonConstants.TYPE_MERCHANT, null).getLoginIdAsLong();
+        Long mid = SaManager.getStpLogic(CommonConstants.TYPE_MERCHANT).getLoginIdAsLong();
         MerchantDO m = merchantMapper.selectById(mid);
         if (m == null) throw new BusinessException(ErrorCode.MERCHANT_NOT_FOUND);
         return m;

@@ -1,7 +1,7 @@
 package com.yan.freshfood.admin.service.impl;
 
+import cn.dev33.satoken.SaManager;
 import cn.dev33.satoken.secure.BCrypt;
-import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -86,7 +86,7 @@ public class AdminAccountServiceImpl implements AdminAccountService {
         if (id == SUPER_ADMIN_ID) {
             throw new BusinessException(ErrorCode.ADMIN_PROTECTED);
         }
-        long currentAdminId = StpUtil.getStpLogic(CommonConstants.TYPE_ADMIN, null).getLoginIdAsLong();
+        long currentAdminId = SaManager.getStpLogic(CommonConstants.TYPE_ADMIN).getLoginIdAsLong();
         if (id == currentAdminId && status == 0) {
             throw new BusinessException(ErrorCode.ADMIN_SELF_OP_INVALID);
         }
@@ -106,7 +106,7 @@ public class AdminAccountServiceImpl implements AdminAccountService {
         if (id == SUPER_ADMIN_ID) {
             throw new BusinessException(ErrorCode.ADMIN_PROTECTED);
         }
-        long currentAdminId = StpUtil.getStpLogic(CommonConstants.TYPE_ADMIN, null).getLoginIdAsLong();
+        long currentAdminId = SaManager.getStpLogic(CommonConstants.TYPE_ADMIN).getLoginIdAsLong();
         if (id == currentAdminId) {
             throw new BusinessException(ErrorCode.ADMIN_SELF_OP_INVALID);
         }
@@ -123,7 +123,7 @@ public class AdminAccountServiceImpl implements AdminAccountService {
         if (id == SUPER_ADMIN_ID) {
             throw new BusinessException(ErrorCode.ADMIN_PROTECTED);
         }
-        long currentAdminId = StpUtil.getStpLogic(CommonConstants.TYPE_ADMIN, null).getLoginIdAsLong();
+        long currentAdminId = SaManager.getStpLogic(CommonConstants.TYPE_ADMIN).getLoginIdAsLong();
         if (id == currentAdminId) {
             throw new BusinessException(ErrorCode.ADMIN_SELF_OP_INVALID);
         }

@@ -1,8 +1,8 @@
 package com.yan.freshfood.merchant.service.impl;
 
+import cn.dev33.satoken.SaManager;
 import cn.dev33.satoken.secure.BCrypt;
 import cn.dev33.satoken.stp.StpLogic;
-import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.yan.freshfood.common.constant.CommonConstants;
 import com.yan.freshfood.common.exception.BusinessException;
@@ -39,14 +39,14 @@ public class MerchantAuthServiceImpl implements MerchantAuthService {
         if (!BCrypt.checkpw(dto.getPassword(), m.getPassword())) {
             throw new BusinessException(ErrorCode.PASSWORD_ERROR);
         }
-        StpLogic logic = StpUtil.getStpLogic(CommonConstants.TYPE_MERCHANT, null);
+        StpLogic logic = SaManager.getStpLogic(CommonConstants.TYPE_MERCHANT);
         logic.login(m.getId());
         return new MerchantLoginVO(logic.getTokenValue(), toVO(m));
     }
 
     @Override
     public void logout() {
-        StpLogic logic = StpUtil.getStpLogic(CommonConstants.TYPE_MERCHANT, null);
+        StpLogic logic = SaManager.getStpLogic(CommonConstants.TYPE_MERCHANT);
         logic.logout();
     }
 

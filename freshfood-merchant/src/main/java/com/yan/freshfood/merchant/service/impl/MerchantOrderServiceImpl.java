@@ -1,6 +1,6 @@
 package com.yan.freshfood.merchant.service.impl;
 
-import cn.dev33.satoken.stp.StpUtil;
+import cn.dev33.satoken.SaManager;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yan.freshfood.common.constant.CommonConstants;
@@ -120,6 +120,6 @@ public class MerchantOrderServiceImpl implements MerchantOrderService {
     }
 
     private Long currentMerchantId() {
-        return StpUtil.getStpLogic(CommonConstants.TYPE_MERCHANT, null).getLoginIdAsLong();
+        return SaManager.getStpLogic(CommonConstants.TYPE_MERCHANT).getLoginIdAsLong();
     }
 }

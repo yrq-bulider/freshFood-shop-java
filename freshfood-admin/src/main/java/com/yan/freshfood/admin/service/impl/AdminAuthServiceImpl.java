@@ -1,8 +1,8 @@
 package com.yan.freshfood.admin.service.impl;
 
+import cn.dev33.satoken.SaManager;
 import cn.dev33.satoken.secure.BCrypt;
 import cn.dev33.satoken.stp.StpLogic;
-import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.yan.freshfood.admin.dto.AdminLoginDTO;
 import com.yan.freshfood.admin.mapper.AdminMapper;
@@ -36,14 +36,14 @@ public class AdminAuthServiceImpl implements AdminAuthService {
         if (!BCrypt.checkpw(dto.getPassword(), a.getPassword())) {
             throw new BusinessException(ErrorCode.PASSWORD_ERROR);
         }
-        StpLogic logic = StpUtil.getStpLogic(CommonConstants.TYPE_ADMIN, null);
+        StpLogic logic = SaManager.getStpLogic(CommonConstants.TYPE_ADMIN);
         logic.login(a.getId());
         return new AdminLoginVO(logic.getTokenValue(), toVO(a));
     }
 
     @Override
     public void logout() {
-        StpLogic logic = StpUtil.getStpLogic(CommonConstants.TYPE_ADMIN, null);
+        StpLogic logic = SaManager.getStpLogic(CommonConstants.TYPE_ADMIN);
         logic.logout();
     }
 
