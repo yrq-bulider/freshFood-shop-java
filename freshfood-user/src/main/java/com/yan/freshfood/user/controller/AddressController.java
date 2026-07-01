@@ -4,12 +4,14 @@ import com.yan.freshfood.common.response.R;
 import com.yan.freshfood.user.dto.AddressDTO;
 import com.yan.freshfood.user.service.AddressService;
 import com.yan.freshfood.user.vo.AddressVO;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Tag(name = "用户端-收货地址", description = "用户收货地址的增删改查及默认设置")
 @RestController
 @RequestMapping("/api/v1/addresses")
 @RequiredArgsConstructor

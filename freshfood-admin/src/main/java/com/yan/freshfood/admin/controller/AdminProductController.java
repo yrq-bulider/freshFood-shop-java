@@ -6,6 +6,7 @@ import com.yan.freshfood.admin.vo.AdminProductVO;
 import com.yan.freshfood.admin.vo.AuditPendingVO;
 import com.yan.freshfood.common.response.PageR;
 import com.yan.freshfood.common.response.R;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+@Tag(name = "管理端-商品审核", description = "商品上架审核、商品管理")
 @RestController
 @RequestMapping("/api/v1/admin/products")
 @RequiredArgsConstructor

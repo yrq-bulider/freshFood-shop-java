@@ -8,12 +8,14 @@ import com.yan.freshfood.user.service.SearchService;
 import com.yan.freshfood.user.vo.HotWordVO;
 import com.yan.freshfood.user.vo.ProductSimpleVO;
 import com.yan.freshfood.user.vo.SearchHistoryVO;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.List;
 
+@Tag(name = "用户端-搜索", description = "商品搜索与搜索历史")
 @RestController
 @RequestMapping("/api/v1/search")
 @RequiredArgsConstructor

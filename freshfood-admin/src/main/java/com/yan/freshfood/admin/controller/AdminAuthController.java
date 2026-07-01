@@ -5,10 +5,12 @@ import com.yan.freshfood.admin.dto.AdminLoginDTO;
 import com.yan.freshfood.admin.service.AdminAuthService;
 import com.yan.freshfood.admin.vo.AdminLoginVO;
 import com.yan.freshfood.common.response.R;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+@Tag(name = "管理端-认证", description = "管理员登录、登出")
 @SaIgnore
 @RestController
 @RequestMapping("/api/v1/admin/auth")

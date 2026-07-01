@@ -5,6 +5,7 @@ import com.yan.freshfood.admin.service.UserAdminService;
 import com.yan.freshfood.admin.vo.AdminUserVO;
 import com.yan.freshfood.common.response.PageR;
 import com.yan.freshfood.common.response.R;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+@Tag(name = "管理端-用户管理", description = "C 端用户分页查询、启停")
 @RestController
 @RequestMapping("/api/v1/admin/users")
 @RequiredArgsConstructor

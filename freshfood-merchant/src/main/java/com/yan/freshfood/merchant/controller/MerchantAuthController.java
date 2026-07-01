@@ -5,10 +5,12 @@ import com.yan.freshfood.common.response.R;
 import com.yan.freshfood.merchant.dto.MerchantLoginDTO;
 import com.yan.freshfood.merchant.service.MerchantAuthService;
 import com.yan.freshfood.merchant.vo.MerchantLoginVO;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+@Tag(name = "商家端-账号", description = "商家注册、登录、登出")
 @SaIgnore
 @RestController
 @RequestMapping("/api/v1/merchant/auth")

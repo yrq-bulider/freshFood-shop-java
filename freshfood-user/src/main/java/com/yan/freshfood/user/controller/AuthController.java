@@ -6,10 +6,12 @@ import com.yan.freshfood.user.dto.LoginDTO;
 import com.yan.freshfood.user.dto.RegisterDTO;
 import com.yan.freshfood.user.service.AuthService;
 import com.yan.freshfood.user.vo.LoginVO;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+@Tag(name = "用户端-账号", description = "用户注册、登录、登出、当前用户信息")
 @SaIgnore
 @RestController
 @RequestMapping("/api/v1/auth")

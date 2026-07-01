@@ -6,6 +6,7 @@ import com.yan.freshfood.user.dto.ReviewCreateDTO;
 import com.yan.freshfood.user.service.ReviewService;
 import com.yan.freshfood.user.vo.OrderItemVO;
 import com.yan.freshfood.user.vo.ReviewVO;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
+@Tag(name = "用户端-评价", description = "订单完成后对商品的评价与查看")
 @RestController
 @RequestMapping("/api/v1/reviews")
 @RequiredArgsConstructor

@@ -4,9 +4,11 @@ import com.yan.freshfood.common.response.PageR;
 import com.yan.freshfood.common.response.R;
 import com.yan.freshfood.user.service.MessageService;
 import com.yan.freshfood.user.vo.MessageVO;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+@Tag(name = "用户端-消息", description = "系统消息通知列表与已读标记")
 @RestController
 @RequestMapping("/api/v1/messages")
 @RequiredArgsConstructor

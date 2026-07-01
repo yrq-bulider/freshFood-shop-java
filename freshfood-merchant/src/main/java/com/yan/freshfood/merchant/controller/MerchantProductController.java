@@ -6,6 +6,7 @@ import com.yan.freshfood.merchant.dto.ProductCreateDTO;
 import com.yan.freshfood.merchant.dto.ProductUpdateDTO;
 import com.yan.freshfood.merchant.service.MerchantProductService;
 import com.yan.freshfood.merchant.vo.MerchantProductVO;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+@Tag(name = "商家端-商品", description = "商家发布、编辑、上下架商品")
 @RestController
 @RequestMapping("/api/v1/merchant/products")
 @RequiredArgsConstructor

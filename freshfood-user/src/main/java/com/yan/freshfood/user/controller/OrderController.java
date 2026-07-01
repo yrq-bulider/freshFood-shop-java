@@ -8,12 +8,14 @@ import com.yan.freshfood.user.service.OrderService;
 import com.yan.freshfood.user.vo.LogisticsVO;
 import com.yan.freshfood.user.vo.OrderPreviewVO;
 import com.yan.freshfood.user.vo.OrderVO;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
+@Tag(name = "用户端-订单", description = "订单创建、支付、取消、确认收货、详情查询")
 @RestController
 @RequestMapping("/api/v1/orders")
 @RequiredArgsConstructor

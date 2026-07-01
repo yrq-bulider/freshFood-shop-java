@@ -5,12 +5,14 @@ import com.yan.freshfood.user.dto.CartAddDTO;
 import com.yan.freshfood.user.dto.CartUpdateDTO;
 import com.yan.freshfood.user.service.CartService;
 import com.yan.freshfood.user.vo.CartVO;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Tag(name = "用户端-购物车", description = "购物车商品增删改查、选中切换")
 @RestController
 @RequestMapping("/api/v1/cart")
 @RequiredArgsConstructor

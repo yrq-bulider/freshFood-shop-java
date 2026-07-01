@@ -4,6 +4,7 @@ import com.yan.freshfood.common.response.R;
 import com.yan.freshfood.merchant.dto.MerchantUpdateDTO;
 import com.yan.freshfood.merchant.service.MerchantProfileService;
 import com.yan.freshfood.merchant.vo.MerchantVO;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Tag(name = "商家端-店铺资料", description = "商家店铺信息维护、资质提交")
 @RestController
 @RequestMapping("/api/v1/merchant/profile")
 @RequiredArgsConstructor

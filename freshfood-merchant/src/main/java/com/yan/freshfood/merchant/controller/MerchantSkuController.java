@@ -5,6 +5,7 @@ import com.yan.freshfood.merchant.dto.SkuCreateDTO;
 import com.yan.freshfood.merchant.dto.SkuUpdateDTO;
 import com.yan.freshfood.merchant.service.MerchantSkuService;
 import com.yan.freshfood.merchant.vo.SkuVO;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+@Tag(name = "商家端-SKU", description = "商品 SKU 规格与库存管理")
 @RestController
 @RequestMapping("/api/v1/merchant")
 @RequiredArgsConstructor

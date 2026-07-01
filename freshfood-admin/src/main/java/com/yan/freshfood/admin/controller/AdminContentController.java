@@ -13,12 +13,14 @@ import com.yan.freshfood.admin.vo.AdminCategoryTreeVO;
 import com.yan.freshfood.admin.vo.AdminCategoryVO;
 import com.yan.freshfood.admin.vo.AdminHotWordVO;
 import com.yan.freshfood.common.response.R;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Tag(name = "管理端-运营内容", description = "Banner、搜索热词、商品分类的运营管理")
 @RestController
 @RequestMapping("/api/v1/admin")
 @RequiredArgsConstructor

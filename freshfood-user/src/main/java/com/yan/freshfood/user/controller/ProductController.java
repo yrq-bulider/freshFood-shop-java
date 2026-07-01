@@ -7,11 +7,13 @@ import com.yan.freshfood.user.service.ProductService;
 import com.yan.freshfood.user.vo.ProductDetailVO;
 import com.yan.freshfood.user.vo.ProductSimpleVO;
 import com.yan.freshfood.user.vo.ReviewVO;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Tag(name = "用户端-商品", description = "商品列表、详情、分类筛选")
 @SaIgnore
 @RestController
 @RequestMapping("/api/v1/products")

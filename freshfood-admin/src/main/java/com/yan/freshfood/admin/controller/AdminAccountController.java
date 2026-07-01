@@ -9,6 +9,7 @@ import com.yan.freshfood.admin.service.AdminAccountService;
 import com.yan.freshfood.admin.vo.AdminAccountVO;
 import com.yan.freshfood.common.response.PageR;
 import com.yan.freshfood.common.response.R;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+@Tag(name = "管理端-账号管理", description = "管理员账号 CRUD、启停、重置密码、删除")
 @RestController
 @RequestMapping("/api/v1/admin/admins")
 @RequiredArgsConstructor
