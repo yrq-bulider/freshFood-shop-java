@@ -61,7 +61,8 @@ CREATE TABLE IF NOT EXISTS `admin` (
 
 -- 测试数据：密码 123456（BCrypt 加密）
 INSERT INTO `user` (username, password, nickname, status)
-VALUES ('zhangsan', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '张三', 1);
+VALUES ('zhangsan', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '张三', 1),
+       ('lisi',     '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '李四', 1);
 
 INSERT INTO `merchant` (username, password, shop_name, contact_name, audit_status, status)
 VALUES ('m01', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '鲜果园旗舰店', '李老板', 1, 1);
