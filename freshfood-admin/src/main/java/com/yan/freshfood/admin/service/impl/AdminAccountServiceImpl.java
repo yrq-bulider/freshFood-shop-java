@@ -90,6 +90,9 @@ public class AdminAccountServiceImpl implements AdminAccountService {
         if (id == currentAdminId && status == 0) {
             throw new BusinessException(ErrorCode.ADMIN_SELF_OP_INVALID);
         }
+        if (status != 0 && status != 1) {
+            throw new BusinessException(ErrorCode.PARAM_INVALID);
+        }
         AdminDO admin = adminMapper.selectById(id);
         if (admin == null) {
             throw new BusinessException(ErrorCode.ADMIN_NOT_FOUND);

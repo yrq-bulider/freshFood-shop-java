@@ -207,6 +207,19 @@ class AdminAccountServiceImplTest {
     }
 
     @Test
+    void updateStatus_invalidValue_throwsParamInvalid() {
+        try (MockedStatic<StpUtil> stp = mockStatic(StpUtil.class)) {
+            StpLogic logic = mock(StpLogic.class);
+            stp.when(() -> StpUtil.getStpLogic(CommonConstants.TYPE_ADMIN, null)).thenReturn(logic);
+            when(logic.getLoginIdAsLong()).thenReturn(2L);
+
+            BusinessException ex = assertThrows(BusinessException.class,
+                    () -> service.updateStatus(3L, 99));
+            assertEquals(ErrorCode.PARAM_INVALID.getCode(), ex.getCode());
+        }
+    }
+
+    @Test
     void detail_notFound_throws9001() {
         when(adminMapper.selectById(999L)).thenReturn(null);
 
