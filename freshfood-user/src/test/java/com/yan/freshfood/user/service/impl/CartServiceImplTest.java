@@ -124,7 +124,7 @@ class CartServiceImplTest {
             assertEquals(1, vo.getList().size());
             assertEquals("119.80", vo.getTotalAmount());
             assertEquals("119.80", vo.getSelectedAmount());
-            assertEquals("0.00", vo.getShippingFee());  // >= 99 包邮
+            assertEquals("0", vo.getShippingFee());  // >= 99 包邮 (BigDecimal.ZERO.toPlainString())
             assertEquals(1, vo.getSelectedCount());
             assertEquals(0, vo.getInvalidCount());
             assertTrue(vo.getList().get(0).getValid());

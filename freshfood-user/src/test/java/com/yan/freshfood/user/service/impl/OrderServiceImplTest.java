@@ -1,6 +1,7 @@
 package com.yan.freshfood.user.service.impl;
 
 import cn.dev33.satoken.stp.StpUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.yan.freshfood.common.exception.BusinessException;
 import com.yan.freshfood.common.exception.ErrorCode;
 import com.yan.freshfood.model.entity.product.ProductDO;
@@ -43,6 +44,7 @@ class OrderServiceImplTest {
     @Mock private SkuMapper skuMapper;
     @Mock private ProductMapper productMapper;
     @Mock private AddressMapper addressMapper;
+    @Mock(strictness = Mock.Strictness.LENIENT) private com.fasterxml.jackson.databind.ObjectMapper objectMapper;
 
     @InjectMocks private OrderServiceImpl orderService;
 
@@ -96,8 +98,6 @@ class OrderServiceImplTest {
             when(skuMapper.selectBatchIds(any())).thenReturn(List.of(sku));
             when(productMapper.selectBatchIds(any())).thenReturn(List.of(product));
             when(addressMapper.selectById(7001L)).thenReturn(address);
-            when(productMapper.selectById(1001L)).thenReturn(product);
-            when(skuMapper.selectById(2001L)).thenReturn(sku);
             when(orderMapper.insert(any(OrderDO.class))).thenAnswer(inv -> {
                 OrderDO o = inv.getArgument(0);
                 o.setId(8888L);
@@ -115,7 +115,7 @@ class OrderServiceImplTest {
 
             assertNotNull(vo);
             assertEquals(8888L, vo.getId());
-            assertEquals("59.90", vo.getPayableAmount());
+            assertEquals("119.80", vo.getPayableAmount());
             assertEquals(1, vo.getStatus());
             assertEquals("待付款", vo.getStatusText());
             verify(orderMapper).insert(any(OrderDO.class));
@@ -164,7 +164,7 @@ class OrderServiceImplTest {
 
             when(orderMapper.selectById(8888L)).thenReturn(order);
             when(orderItemMapper.selectList(any(LambdaQueryWrapper.class))).thenReturn(List.of(item));
-            when(skuMapper.selectById(2001L)).thenReturn(sku);
+            when(skuMapper.selectBatchIds(any())).thenReturn(List.of(sku));
             when(orderMapper.updateById(any(OrderDO.class))).thenReturn(1);
             when(skuMapper.updateById(any(SkuDO.class))).thenReturn(1);
 

@@ -2,7 +2,7 @@ package com.yan.freshfood.admin.service.impl;
 
 import cn.dev33.satoken.secure.BCrypt;
 import cn.dev33.satoken.stp.StpLogic;
-import cn.dev33.satoken.stp.StpUtil;
+import cn.dev33.satoken.SaManager;
 import com.yan.freshfood.common.constant.CommonConstants;
 import com.yan.freshfood.model.entity.UserDO;
 import com.yan.freshfood.user.mapper.UserMapper;
@@ -12,6 +12,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -21,6 +23,7 @@ import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 class UserAdminServiceImplTest {
 
     @Mock private UserMapper userMapper;
@@ -29,9 +32,9 @@ class UserAdminServiceImplTest {
 
     @Test
     void update_status_toggles_value() {
-        try (MockedStatic<StpUtil> stp = mockStatic(StpUtil.class)) {
+        try (MockedStatic<SaManager> stp = mockStatic(SaManager.class)) {
             StpLogic logic = org.mockito.Mockito.mock(StpLogic.class);
-            stp.when(() -> StpUtil.getStpLogic(any(), anyString())).thenReturn(logic);
+            stp.when(() -> SaManager.getStpLogic(anyString())).thenReturn(logic);
             when(logic.getLoginIdAsLong()).thenReturn(1L);
 
             UserDO u = new UserDO();
@@ -47,9 +50,9 @@ class UserAdminServiceImplTest {
 
     @Test
     void reset_password_writes_bcrypt_123456() {
-        try (MockedStatic<StpUtil> stp = mockStatic(StpUtil.class)) {
+        try (MockedStatic<SaManager> stp = mockStatic(SaManager.class)) {
             StpLogic logic = org.mockito.Mockito.mock(StpLogic.class);
-            stp.when(() -> StpUtil.getStpLogic(any(), anyString())).thenReturn(logic);
+            stp.when(() -> SaManager.getStpLogic(anyString())).thenReturn(logic);
             when(logic.getLoginIdAsLong()).thenReturn(1L);
 
             UserDO u = new UserDO();

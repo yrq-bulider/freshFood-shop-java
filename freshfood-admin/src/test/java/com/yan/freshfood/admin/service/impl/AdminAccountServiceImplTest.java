@@ -1,8 +1,8 @@
 package com.yan.freshfood.admin.service.impl;
 
+import cn.dev33.satoken.SaManager;
 import cn.dev33.satoken.secure.BCrypt;
 import cn.dev33.satoken.stp.StpLogic;
-import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.yan.freshfood.admin.dto.AdminCreateDTO;
 import com.yan.freshfood.admin.dto.AdminUpdateDTO;
@@ -126,9 +126,9 @@ class AdminAccountServiceImplTest {
 
     @Test
     void updateStatus_selfBan_throws9003() {
-        try (MockedStatic<StpUtil> stp = mockStatic(StpUtil.class)) {
+        try (MockedStatic<SaManager> stp = mockStatic(SaManager.class)) {
             StpLogic logic = mock(StpLogic.class);
-            stp.when(() -> StpUtil.getStpLogic(CommonConstants.TYPE_ADMIN, null)).thenReturn(logic);
+            stp.when(() -> SaManager.getStpLogic(CommonConstants.TYPE_ADMIN)).thenReturn(logic);
             when(logic.getLoginIdAsLong()).thenReturn(2L);
 
             BusinessException ex = assertThrows(BusinessException.class,
@@ -142,9 +142,9 @@ class AdminAccountServiceImplTest {
         AdminDO existing = adminDO(2L, "admin2", "n", 0);
         when(adminMapper.selectById(2L)).thenReturn(existing);
 
-        try (MockedStatic<StpUtil> stp = mockStatic(StpUtil.class)) {
+        try (MockedStatic<SaManager> stp = mockStatic(SaManager.class)) {
             StpLogic logic = mock(StpLogic.class);
-            stp.when(() -> StpUtil.getStpLogic(CommonConstants.TYPE_ADMIN, null)).thenReturn(logic);
+            stp.when(() -> SaManager.getStpLogic(CommonConstants.TYPE_ADMIN)).thenReturn(logic);
             when(logic.getLoginIdAsLong()).thenReturn(2L);
 
             service.updateStatus(2L, 1);
@@ -162,9 +162,9 @@ class AdminAccountServiceImplTest {
 
     @Test
     void resetPassword_self_throws9003() {
-        try (MockedStatic<StpUtil> stp = mockStatic(StpUtil.class)) {
+        try (MockedStatic<SaManager> stp = mockStatic(SaManager.class)) {
             StpLogic logic = mock(StpLogic.class);
-            stp.when(() -> StpUtil.getStpLogic(CommonConstants.TYPE_ADMIN, null)).thenReturn(logic);
+            stp.when(() -> SaManager.getStpLogic(CommonConstants.TYPE_ADMIN)).thenReturn(logic);
             when(logic.getLoginIdAsLong()).thenReturn(2L);
 
             BusinessException ex = assertThrows(BusinessException.class,
@@ -178,9 +178,9 @@ class AdminAccountServiceImplTest {
         AdminDO existing = adminDO(3L, "admin3", "n", 1);
         when(adminMapper.selectById(3L)).thenReturn(existing);
 
-        try (MockedStatic<StpUtil> stp = mockStatic(StpUtil.class)) {
+        try (MockedStatic<SaManager> stp = mockStatic(SaManager.class)) {
             StpLogic logic = mock(StpLogic.class);
-            stp.when(() -> StpUtil.getStpLogic(CommonConstants.TYPE_ADMIN, null)).thenReturn(logic);
+            stp.when(() -> SaManager.getStpLogic(CommonConstants.TYPE_ADMIN)).thenReturn(logic);
             when(logic.getLoginIdAsLong()).thenReturn(2L);
 
             service.resetPassword(3L, "newpass123");
@@ -195,9 +195,9 @@ class AdminAccountServiceImplTest {
 
     @Test
     void delete_self_throws9003() {
-        try (MockedStatic<StpUtil> stp = mockStatic(StpUtil.class)) {
+        try (MockedStatic<SaManager> stp = mockStatic(SaManager.class)) {
             StpLogic logic = mock(StpLogic.class);
-            stp.when(() -> StpUtil.getStpLogic(CommonConstants.TYPE_ADMIN, null)).thenReturn(logic);
+            stp.when(() -> SaManager.getStpLogic(CommonConstants.TYPE_ADMIN)).thenReturn(logic);
             when(logic.getLoginIdAsLong()).thenReturn(2L);
 
             BusinessException ex = assertThrows(BusinessException.class,
@@ -208,9 +208,9 @@ class AdminAccountServiceImplTest {
 
     @Test
     void updateStatus_invalidValue_throwsParamInvalid() {
-        try (MockedStatic<StpUtil> stp = mockStatic(StpUtil.class)) {
+        try (MockedStatic<SaManager> stp = mockStatic(SaManager.class)) {
             StpLogic logic = mock(StpLogic.class);
-            stp.when(() -> StpUtil.getStpLogic(CommonConstants.TYPE_ADMIN, null)).thenReturn(logic);
+            stp.when(() -> SaManager.getStpLogic(CommonConstants.TYPE_ADMIN)).thenReturn(logic);
             when(logic.getLoginIdAsLong()).thenReturn(2L);
 
             BusinessException ex = assertThrows(BusinessException.class,

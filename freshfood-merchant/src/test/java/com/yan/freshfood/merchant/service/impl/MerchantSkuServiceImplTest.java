@@ -1,7 +1,7 @@
 package com.yan.freshfood.merchant.service.impl;
 
 import cn.dev33.satoken.stp.StpLogic;
-import cn.dev33.satoken.stp.StpUtil;
+import cn.dev33.satoken.SaManager;
 import com.yan.freshfood.common.exception.BusinessException;
 import com.yan.freshfood.common.exception.ErrorCode;
 import com.yan.freshfood.merchant.mapper.ProductMapper;
@@ -34,9 +34,9 @@ class MerchantSkuServiceImplTest {
 
     @Test
     void delete_throws_when_has_sales() {
-        try (MockedStatic<StpUtil> stp = mockStatic(StpUtil.class)) {
+        try (MockedStatic<SaManager> stp = mockStatic(SaManager.class)) {
             StpLogic logic = org.mockito.Mockito.mock(StpLogic.class);
-            stp.when(() -> StpUtil.getStpLogic(any(), anyString())).thenReturn(logic);
+            stp.when(() -> SaManager.getStpLogic(anyString())).thenReturn(logic);
             when(logic.getLoginIdAsLong()).thenReturn(1L);
 
             SkuDO sku = new SkuDO();

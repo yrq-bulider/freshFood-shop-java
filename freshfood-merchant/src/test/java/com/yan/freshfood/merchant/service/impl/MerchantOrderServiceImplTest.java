@@ -1,7 +1,7 @@
 package com.yan.freshfood.merchant.service.impl;
 
 import cn.dev33.satoken.stp.StpLogic;
-import cn.dev33.satoken.stp.StpUtil;
+import cn.dev33.satoken.SaManager;
 import com.yan.freshfood.common.exception.BusinessException;
 import com.yan.freshfood.common.exception.ErrorCode;
 import com.yan.freshfood.merchant.mapper.OrderItemMapper;
@@ -35,9 +35,9 @@ class MerchantOrderServiceImplTest {
 
     @Test
     void ship_transitions_2_to_3_and_sets_ship_time() {
-        try (MockedStatic<StpUtil> stp = mockStatic(StpUtil.class)) {
+        try (MockedStatic<SaManager> stp = mockStatic(SaManager.class)) {
             StpLogic logic = org.mockito.Mockito.mock(StpLogic.class);
-            stp.when(() -> StpUtil.getStpLogic(any(), anyString())).thenReturn(logic);
+            stp.when(() -> SaManager.getStpLogic(anyString())).thenReturn(logic);
             when(logic.getLoginIdAsLong()).thenReturn(1L);
 
             OrderDO order = new OrderDO();
@@ -61,9 +61,9 @@ class MerchantOrderServiceImplTest {
 
     @Test
     void ship_throws_when_status_not_2() {
-        try (MockedStatic<StpUtil> stp = mockStatic(StpUtil.class)) {
+        try (MockedStatic<SaManager> stp = mockStatic(SaManager.class)) {
             StpLogic logic = org.mockito.Mockito.mock(StpLogic.class);
-            stp.when(() -> StpUtil.getStpLogic(any(), anyString())).thenReturn(logic);
+            stp.when(() -> SaManager.getStpLogic(anyString())).thenReturn(logic);
             when(logic.getLoginIdAsLong()).thenReturn(1L);
 
             OrderDO order = new OrderDO();
@@ -80,9 +80,9 @@ class MerchantOrderServiceImplTest {
 
     @Test
     void ship_throws_when_not_owner() {
-        try (MockedStatic<StpUtil> stp = mockStatic(StpUtil.class)) {
+        try (MockedStatic<SaManager> stp = mockStatic(SaManager.class)) {
             StpLogic logic = org.mockito.Mockito.mock(StpLogic.class);
-            stp.when(() -> StpUtil.getStpLogic(any(), anyString())).thenReturn(logic);
+            stp.when(() -> SaManager.getStpLogic(anyString())).thenReturn(logic);
             when(logic.getLoginIdAsLong()).thenReturn(1L);
 
             OrderDO order = new OrderDO();

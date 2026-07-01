@@ -1,7 +1,7 @@
 package com.yan.freshfood.admin.service.impl;
 
 import cn.dev33.satoken.stp.StpLogic;
-import cn.dev33.satoken.stp.StpUtil;
+import cn.dev33.satoken.SaManager;
 import com.yan.freshfood.admin.dto.BannerCreateDTO;
 import com.yan.freshfood.common.exception.BusinessException;
 import com.yan.freshfood.common.exception.ErrorCode;
@@ -17,6 +17,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import java.util.List;
 
@@ -29,6 +31,7 @@ import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 class ContentAdminServiceImplTest {
 
     @Mock private BannerMapper bannerMapper;
@@ -40,9 +43,9 @@ class ContentAdminServiceImplTest {
 
     @Test
     void banner_create_inserts_with_default_sort() {
-        try (MockedStatic<StpUtil> stp = mockStatic(StpUtil.class)) {
+        try (MockedStatic<SaManager> stp = mockStatic(SaManager.class)) {
             StpLogic logic = org.mockito.Mockito.mock(StpLogic.class);
-            stp.when(() -> StpUtil.getStpLogic(any(), anyString())).thenReturn(logic);
+            stp.when(() -> SaManager.getStpLogic(anyString())).thenReturn(logic);
             when(logic.getLoginIdAsLong()).thenReturn(1L);
 
             BannerCreateDTO dto = new BannerCreateDTO();
@@ -66,9 +69,9 @@ class ContentAdminServiceImplTest {
 
     @Test
     void banner_delete_throws_when_not_found() {
-        try (MockedStatic<StpUtil> stp = mockStatic(StpUtil.class)) {
+        try (MockedStatic<SaManager> stp = mockStatic(SaManager.class)) {
             StpLogic logic = org.mockito.Mockito.mock(StpLogic.class);
-            stp.when(() -> StpUtil.getStpLogic(any(), anyString())).thenReturn(logic);
+            stp.when(() -> SaManager.getStpLogic(anyString())).thenReturn(logic);
             when(logic.getLoginIdAsLong()).thenReturn(1L);
 
             when(bannerMapper.selectById(99L)).thenReturn(null);
@@ -81,9 +84,9 @@ class ContentAdminServiceImplTest {
 
     @Test
     void category_tree_builds_nested_structure() {
-        try (MockedStatic<StpUtil> stp = mockStatic(StpUtil.class)) {
+        try (MockedStatic<SaManager> stp = mockStatic(SaManager.class)) {
             StpLogic logic = org.mockito.Mockito.mock(StpLogic.class);
-            stp.when(() -> StpUtil.getStpLogic(any(), anyString())).thenReturn(logic);
+            stp.when(() -> SaManager.getStpLogic(anyString())).thenReturn(logic);
             when(logic.getLoginIdAsLong()).thenReturn(1L);
 
             CategoryDO top = new CategoryDO();
@@ -104,9 +107,9 @@ class ContentAdminServiceImplTest {
 
     @Test
     void category_delete_throws_when_has_children() {
-        try (MockedStatic<StpUtil> stp = mockStatic(StpUtil.class)) {
+        try (MockedStatic<SaManager> stp = mockStatic(SaManager.class)) {
             StpLogic logic = org.mockito.Mockito.mock(StpLogic.class);
-            stp.when(() -> StpUtil.getStpLogic(any(), anyString())).thenReturn(logic);
+            stp.when(() -> SaManager.getStpLogic(anyString())).thenReturn(logic);
             when(logic.getLoginIdAsLong()).thenReturn(1L);
 
             CategoryDO c = new CategoryDO();

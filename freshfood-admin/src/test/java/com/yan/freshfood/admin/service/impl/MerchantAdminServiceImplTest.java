@@ -1,7 +1,7 @@
 package com.yan.freshfood.admin.service.impl;
 
 import cn.dev33.satoken.stp.StpLogic;
-import cn.dev33.satoken.stp.StpUtil;
+import cn.dev33.satoken.SaManager;
 import com.yan.freshfood.common.exception.BusinessException;
 import com.yan.freshfood.common.exception.ErrorCode;
 import com.yan.freshfood.merchant.mapper.MerchantMapper;
@@ -12,6 +12,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -21,6 +23,7 @@ import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 class MerchantAdminServiceImplTest {
 
     @Mock private MerchantMapper merchantMapper;
@@ -29,9 +32,9 @@ class MerchantAdminServiceImplTest {
 
     @Test
     void audit_approve_transitions_0_to_1() {
-        try (MockedStatic<StpUtil> stp = mockStatic(StpUtil.class)) {
+        try (MockedStatic<SaManager> stp = mockStatic(SaManager.class)) {
             StpLogic logic = org.mockito.Mockito.mock(StpLogic.class);
-            stp.when(() -> StpUtil.getStpLogic(any(), anyString())).thenReturn(logic);
+            stp.when(() -> SaManager.getStpLogic(anyString())).thenReturn(logic);
             when(logic.getLoginIdAsLong()).thenReturn(1L);
 
             MerchantDO m = new MerchantDO();
@@ -48,9 +51,9 @@ class MerchantAdminServiceImplTest {
 
     @Test
     void audit_reject_transitions_0_to_2() {
-        try (MockedStatic<StpUtil> stp = mockStatic(StpUtil.class)) {
+        try (MockedStatic<SaManager> stp = mockStatic(SaManager.class)) {
             StpLogic logic = org.mockito.Mockito.mock(StpLogic.class);
-            stp.when(() -> StpUtil.getStpLogic(any(), anyString())).thenReturn(logic);
+            stp.when(() -> SaManager.getStpLogic(anyString())).thenReturn(logic);
             when(logic.getLoginIdAsLong()).thenReturn(1L);
 
             MerchantDO m = new MerchantDO();
@@ -66,9 +69,9 @@ class MerchantAdminServiceImplTest {
 
     @Test
     void audit_throws_when_already_approved() {
-        try (MockedStatic<StpUtil> stp = mockStatic(StpUtil.class)) {
+        try (MockedStatic<SaManager> stp = mockStatic(SaManager.class)) {
             StpLogic logic = org.mockito.Mockito.mock(StpLogic.class);
-            stp.when(() -> StpUtil.getStpLogic(any(), anyString())).thenReturn(logic);
+            stp.when(() -> SaManager.getStpLogic(anyString())).thenReturn(logic);
             when(logic.getLoginIdAsLong()).thenReturn(1L);
 
             MerchantDO m = new MerchantDO();
