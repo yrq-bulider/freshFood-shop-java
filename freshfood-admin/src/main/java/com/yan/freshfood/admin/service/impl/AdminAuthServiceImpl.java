@@ -30,10 +30,15 @@ public class AdminAuthServiceImpl implements AdminAuthService {
         if (a == null) {
             throw new BusinessException(ErrorCode.ADMIN_NOT_FOUND);
         }
+        return doLogin(a, dto.getPassword());
+    }
+
+    @Override
+    public AdminLoginVO doLogin(AdminDO a, String rawPassword) {
         if (a.getStatus() == 0) {
             throw new BusinessException(ErrorCode.USER_DISABLED);
         }
-        if (!BCrypt.checkpw(dto.getPassword(), a.getPassword())) {
+        if (!BCrypt.checkpw(rawPassword, a.getPassword())) {
             throw new BusinessException(ErrorCode.PASSWORD_ERROR);
         }
         StpLogic logic = SaManager.getStpLogic(CommonConstants.TYPE_ADMIN);

@@ -30,13 +30,18 @@ public class MerchantAuthServiceImpl implements MerchantAuthService {
         if (m == null) {
             throw new BusinessException(ErrorCode.MERCHANT_NOT_FOUND);
         }
+        return doLogin(m, dto.getPassword());
+    }
+
+    @Override
+    public MerchantLoginVO doLogin(MerchantDO m, String rawPassword) {
         if (m.getStatus() == 0) {
             throw new BusinessException(ErrorCode.USER_DISABLED);
         }
         if (m.getAuditStatus() != 1) {
             throw new BusinessException(ErrorCode.MERCHANT_PENDING);
         }
-        if (!BCrypt.checkpw(dto.getPassword(), m.getPassword())) {
+        if (!BCrypt.checkpw(rawPassword, m.getPassword())) {
             throw new BusinessException(ErrorCode.PASSWORD_ERROR);
         }
         StpLogic logic = SaManager.getStpLogic(CommonConstants.TYPE_MERCHANT);

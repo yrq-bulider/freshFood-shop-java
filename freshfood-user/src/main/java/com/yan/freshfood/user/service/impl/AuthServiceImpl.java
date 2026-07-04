@@ -29,10 +29,15 @@ public class AuthServiceImpl implements AuthService {
         if (user == null) {
             throw new BusinessException(ErrorCode.USER_NOT_FOUND);
         }
+        return doLogin(user, dto.getPassword());
+    }
+
+    @Override
+    public LoginVO doLogin(UserDO user, String rawPassword) {
         if (user.getStatus() == 0) {
             throw new BusinessException(ErrorCode.USER_DISABLED);
         }
-        if (!BCrypt.checkpw(dto.getPassword(), user.getPassword())) {
+        if (!BCrypt.checkpw(rawPassword, user.getPassword())) {
             throw new BusinessException(ErrorCode.PASSWORD_ERROR);
         }
         StpUtil.login(user.getId());
