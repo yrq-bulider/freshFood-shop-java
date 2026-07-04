@@ -46,6 +46,8 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public LoginVO register(RegisterDTO dto) {
+        // 跨表 username 唯一性由 freshfood-app/UsernameUniquenessChecker 在 admin.create / 统一登录处保证；
+        // 本模块只阻断 user 表内重名（避免 user→admin/merchant 反向依赖）
         Long count = userMapper.selectCount(
                 new LambdaQueryWrapper<UserDO>().eq(UserDO::getUsername, dto.getUsername())
         );
