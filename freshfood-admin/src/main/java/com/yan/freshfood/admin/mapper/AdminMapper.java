@@ -6,4 +6,11 @@ import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface AdminMapper extends BaseMapper<AdminDO> {
+
+    default long countByUsername(String username) {
+        return selectCount(
+                new com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper<AdminDO>()
+                        .eq(AdminDO::getUsername, username)
+        );
+    }
 }

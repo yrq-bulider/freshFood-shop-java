@@ -6,4 +6,11 @@ import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface MerchantMapper extends BaseMapper<MerchantDO> {
+
+    default long countByUsername(String username) {
+        return selectCount(
+                new com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper<MerchantDO>()
+                        .eq(MerchantDO::getUsername, username)
+        );
+    }
 }
