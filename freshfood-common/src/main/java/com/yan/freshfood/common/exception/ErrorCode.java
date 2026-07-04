@@ -10,6 +10,8 @@ public enum ErrorCode {
     UNAUTHORIZED(401, "未登录"),
     FORBIDDEN(403, "无权限"),
     NOT_FOUND(1004, "资源不存在"),
+    LOGIN_FAILED(1005, "用户名或密码错误"),
+    GLOBAL_USERNAME_EXISTS(1002, "用户名已被使用（跨账号表）"),
     SYSTEM_ERROR(8001, "系统异常"),
 
     USER_NOT_FOUND(2001, "用户不存在"),
