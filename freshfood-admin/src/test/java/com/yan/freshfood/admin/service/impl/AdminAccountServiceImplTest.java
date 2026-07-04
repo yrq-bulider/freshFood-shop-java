@@ -3,14 +3,15 @@ package com.yan.freshfood.admin.service.impl;
 import cn.dev33.satoken.SaManager;
 import cn.dev33.satoken.secure.BCrypt;
 import cn.dev33.satoken.stp.StpLogic;
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.yan.freshfood.admin.dto.AdminCreateDTO;
 import com.yan.freshfood.admin.dto.AdminUpdateDTO;
 import com.yan.freshfood.admin.mapper.AdminMapper;
 import com.yan.freshfood.common.constant.CommonConstants;
 import com.yan.freshfood.common.exception.BusinessException;
 import com.yan.freshfood.common.exception.ErrorCode;
+import com.yan.freshfood.merchant.mapper.MerchantMapper;
 import com.yan.freshfood.model.entity.AdminDO;
+import com.yan.freshfood.user.mapper.UserMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -38,6 +39,12 @@ class AdminAccountServiceImplTest {
     @Mock
     private AdminMapper adminMapper;
 
+    @Mock
+    private UserMapper userMapper;
+
+    @Mock
+    private MerchantMapper merchantMapper;
+
     @InjectMocks
     private AdminAccountServiceImpl service;
 
@@ -60,7 +67,6 @@ class AdminAccountServiceImplTest {
         dto.setPassword("password123");
         dto.setNickname("New Admin");
 
-        when(adminMapper.selectCount(any(Wrapper.class))).thenReturn(0L);
         when(adminMapper.insert(any(AdminDO.class))).thenAnswer(inv -> {
             AdminDO a = inv.getArgument(0);
             a.setId(100L);
@@ -82,15 +88,42 @@ class AdminAccountServiceImplTest {
     }
 
     @Test
-    void create_duplicateUsername_throws9004() {
+    void create_duplicateUsernameInAdminTable_throws1002() {
         AdminCreateDTO dto = new AdminCreateDTO();
         dto.setUsername("admin");
         dto.setPassword("password123");
 
-        when(adminMapper.selectCount(any(Wrapper.class))).thenReturn(1L);
+        when(userMapper.countByUsername("admin")).thenReturn(0L);
+        when(merchantMapper.countByUsername("admin")).thenReturn(0L);
+        when(adminMapper.countByUsername("admin")).thenReturn(1L);
 
         BusinessException ex = assertThrows(BusinessException.class, () -> service.create(dto));
-        assertEquals(ErrorCode.ADMIN_USERNAME_EXISTS.getCode(), ex.getCode());
+        assertEquals(ErrorCode.GLOBAL_USERNAME_EXISTS.getCode(), ex.getCode());
+    }
+
+    @Test
+    void create_duplicateUsernameInUserTable_throws1002() {
+        AdminCreateDTO dto = new AdminCreateDTO();
+        dto.setUsername("shared");
+        dto.setPassword("password123");
+
+        when(userMapper.countByUsername("shared")).thenReturn(1L);
+
+        BusinessException ex = assertThrows(BusinessException.class, () -> service.create(dto));
+        assertEquals(ErrorCode.GLOBAL_USERNAME_EXISTS.getCode(), ex.getCode());
+    }
+
+    @Test
+    void create_duplicateUsernameInMerchantTable_throws1002() {
+        AdminCreateDTO dto = new AdminCreateDTO();
+        dto.setUsername("shared");
+        dto.setPassword("password123");
+
+        when(userMapper.countByUsername("shared")).thenReturn(0L);
+        when(merchantMapper.countByUsername("shared")).thenReturn(1L);
+
+        BusinessException ex = assertThrows(BusinessException.class, () -> service.create(dto));
+        assertEquals(ErrorCode.GLOBAL_USERNAME_EXISTS.getCode(), ex.getCode());
     }
 
     @Test

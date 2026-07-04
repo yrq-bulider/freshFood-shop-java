@@ -13,7 +13,9 @@ import com.yan.freshfood.admin.vo.AdminAccountVO;
 import com.yan.freshfood.common.constant.CommonConstants;
 import com.yan.freshfood.common.exception.BusinessException;
 import com.yan.freshfood.common.exception.ErrorCode;
+import com.yan.freshfood.merchant.mapper.MerchantMapper;
 import com.yan.freshfood.model.entity.AdminDO;
+import com.yan.freshfood.user.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -25,6 +27,8 @@ public class AdminAccountServiceImpl implements AdminAccountService {
     private static final long SUPER_ADMIN_ID = 1L;
 
     private final AdminMapper adminMapper;
+    private final UserMapper userMapper;
+    private final MerchantMapper merchantMapper;
 
     @Override
     public IPage<AdminAccountVO> page(String keyword, Integer status, long pageNum, long pageSize) {
@@ -53,10 +57,10 @@ public class AdminAccountServiceImpl implements AdminAccountService {
 
     @Override
     public AdminAccountVO create(AdminCreateDTO dto) {
-        Long count = adminMapper.selectCount(
-                new LambdaQueryWrapper<AdminDO>().eq(AdminDO::getUsername, dto.getUsername()));
-        if (count != null && count > 0) {
-            throw new BusinessException(ErrorCode.ADMIN_USERNAME_EXISTS);
+        if (userMapper.countByUsername(dto.getUsername()) > 0
+                || merchantMapper.countByUsername(dto.getUsername()) > 0
+                || adminMapper.countByUsername(dto.getUsername()) > 0) {
+            throw new BusinessException(ErrorCode.GLOBAL_USERNAME_EXISTS);
         }
         AdminDO admin = new AdminDO();
         admin.setUsername(dto.getUsername());
