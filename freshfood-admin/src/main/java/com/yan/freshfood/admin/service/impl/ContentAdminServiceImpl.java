@@ -14,7 +14,7 @@ import com.yan.freshfood.admin.vo.AdminCategoryVO;
 import com.yan.freshfood.admin.vo.AdminHotWordVO;
 import com.yan.freshfood.common.exception.BusinessException;
 import com.yan.freshfood.common.exception.ErrorCode;
-import com.yan.freshfood.merchant.mapper.CategoryMapper;
+import com.yan.freshfood.user.mapper.CategoryMapper;
 import com.yan.freshfood.merchant.mapper.ProductMapper;
 import com.yan.freshfood.model.entity.product.BannerDO;
 import com.yan.freshfood.model.entity.product.CategoryDO;
