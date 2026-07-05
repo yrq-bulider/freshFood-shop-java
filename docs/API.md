@@ -49,7 +49,7 @@
 | Method | Path | 鉴权 | 摘要 |
 |---|---|---|---|
 | POST | `/api/v1/auth/register` | 否 | 用户注册 |
-| POST | `/api/v1/auth/logout` | 是 | 用户登出 |
+| POST | `/api/v1/auth/logout` | 否 | 用户登出（需已登录态，否则 NotLoginException） |
 
 ### 2.2 个人信息
 
@@ -150,7 +150,7 @@
 | Method | Path | 鉴权 | 摘要 |
 |---|---|---|---|
 | POST | `/api/v1/merchant/auth/login` | 否 | 商家登录（兼容老端点；推荐统一登录） |
-| POST | `/api/v1/merchant/auth/logout` | 是 | 商家登出 |
+| POST | `/api/v1/merchant/auth/logout` | 否 | 商家登出（需已登录态，否则 NotLoginException） |
 
 ### 3.2 店铺资料
 
@@ -196,7 +196,7 @@
 | Method | Path | 鉴权 | 摘要 |
 |---|---|---|---|
 | POST | `/api/v1/admin/auth/login` | 否 | 管理员登录（兼容老端点） |
-| POST | `/api/v1/admin/auth/logout` | 是 | 管理员登出 |
+| POST | `/api/v1/admin/auth/logout` | 否 | 管理员登出（需已登录态，否则 NotLoginException） |
 
 ### 4.2 账号管理（管理员自身）
 
