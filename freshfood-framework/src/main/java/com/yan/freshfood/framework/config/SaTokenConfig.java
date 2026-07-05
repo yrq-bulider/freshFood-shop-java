@@ -5,11 +5,13 @@ import cn.dev33.satoken.stp.StpLogic;
 import com.yan.freshfood.common.constant.CommonConstants;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 
 @Configuration
 public class SaTokenConfig {
 
     @Bean(name = "stpUserLogic")
+    @Primary
     public StpLogic stpUserLogic() {
         return new StpLogicJwtForSimple(CommonConstants.TYPE_USER);
     }
