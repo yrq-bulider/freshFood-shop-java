@@ -10,7 +10,7 @@ import com.yan.freshfood.common.exception.ErrorCode;
 import com.yan.freshfood.common.response.PageR;
 import com.yan.freshfood.user.mapper.CategoryMapper;
 import com.yan.freshfood.merchant.mapper.MerchantMapper;
-import com.yan.freshfood.merchant.mapper.ProductMapper;
+import com.yan.freshfood.user.mapper.ProductMapper;
 import com.yan.freshfood.model.entity.MerchantDO;
 import com.yan.freshfood.model.entity.product.CategoryDO;
 import com.yan.freshfood.model.entity.product.ProductDO;
