@@ -6,6 +6,7 @@ import com.yan.freshfood.user.service.HomeService;
 import com.yan.freshfood.user.vo.BannerVO;
 import com.yan.freshfood.user.vo.CategoryVO;
 import com.yan.freshfood.user.vo.ProductSimpleVO;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,16 +25,19 @@ public class HomeController {
     private final HomeService homeService;
 
     @GetMapping("/banners")
+    @Operation(summary = "首页轮播图")
     public R<List<BannerVO>> banners() {
         return R.ok(homeService.listBanners());
     }
 
     @GetMapping("/categories")
+    @Operation(summary = "分类树")
     public R<List<CategoryVO>> categories() {
         return R.ok(homeService.listCategories());
     }
 
     @GetMapping("/recommendations")
+    @Operation(summary = "首页推荐商品")
     public R<List<ProductSimpleVO>> recommendations() {
         return R.ok(homeService.listRecommendations());
     }

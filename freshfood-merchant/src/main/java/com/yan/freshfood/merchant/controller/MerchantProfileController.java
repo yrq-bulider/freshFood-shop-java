@@ -4,6 +4,7 @@ import com.yan.freshfood.common.response.R;
 import com.yan.freshfood.merchant.dto.MerchantUpdateDTO;
 import com.yan.freshfood.merchant.service.MerchantProfileService;
 import com.yan.freshfood.merchant.vo.MerchantVO;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,11 +23,13 @@ public class MerchantProfileController {
     private final MerchantProfileService merchantProfileService;
 
     @GetMapping
+    @Operation(summary = "我的店铺资料")
     public R<MerchantVO> get() {
         return R.ok(merchantProfileService.getProfile());
     }
 
     @PutMapping
+    @Operation(summary = "更新店铺资料")
     public R<MerchantVO> update(@Valid @RequestBody MerchantUpdateDTO dto) {
         return R.ok(merchantProfileService.updateProfile(dto));
     }

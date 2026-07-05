@@ -1,21 +1,27 @@
 package com.yan.freshfood.admin.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
+@Schema(description = "编辑分类请求")
 public class CategoryUpdateDTO {
     @NotBlank(message = "分类名不能为空")
     @Size(max = 50, message = "分类名不超过 50 字")
+    @Schema(description = "分类名", example = "水果")
     private String name;
 
     @Size(max = 255, message = "图标 URL 不超过 255 字")
+    @Schema(description = "图标 URL", example = "https://img.example.com/cat1.png")
     private String icon;
 
+    @Schema(description = "排序（升序）", example = "1")
     private Integer sort;
 
     @NotNull(message = "状态不能为空")
+    @Schema(description = "状态：0=禁用 1=启用", example = "1")
     private Integer status;
 }

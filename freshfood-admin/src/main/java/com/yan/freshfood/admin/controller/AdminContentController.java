@@ -13,6 +13,8 @@ import com.yan.freshfood.admin.vo.AdminCategoryTreeVO;
 import com.yan.freshfood.admin.vo.AdminCategoryVO;
 import com.yan.freshfood.admin.vo.AdminHotWordVO;
 import com.yan.freshfood.common.response.R;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -31,24 +33,28 @@ public class AdminContentController {
     // ----- Banner -----
 
     @GetMapping("/banners")
+    @Operation(summary = "Banner 列表")
     public R<List<AdminBannerVO>> bannerList(
-            @RequestParam(required = false) Integer enabled) {
+            @Parameter(description = "是否启用") @RequestParam(required = false) Integer enabled) {
         return R.ok(contentAdminService.bannerList(enabled));
     }
 
     @PostMapping("/banners")
+    @Operation(summary = "新建 Banner")
     public R<AdminBannerVO> bannerCreate(@Valid @RequestBody BannerCreateDTO dto) {
         return R.ok(contentAdminService.bannerCreate(dto));
     }
 
     @PutMapping("/banners/{id}")
-    public R<AdminBannerVO> bannerUpdate(@PathVariable Long id,
+    @Operation(summary = "编辑 Banner")
+    public R<AdminBannerVO> bannerUpdate(@Parameter(description = "Banner ID") @PathVariable Long id,
                                           @Valid @RequestBody BannerUpdateDTO dto) {
         return R.ok(contentAdminService.bannerUpdate(id, dto));
     }
 
     @DeleteMapping("/banners/{id}")
-    public R<Void> bannerDelete(@PathVariable Long id) {
+    @Operation(summary = "删除 Banner")
+    public R<Void> bannerDelete(@Parameter(description = "Banner ID") @PathVariable Long id) {
         contentAdminService.bannerDelete(id);
         return R.ok();
     }
@@ -56,24 +62,28 @@ public class AdminContentController {
     // ----- HotWord -----
 
     @GetMapping("/hot-words")
+    @Operation(summary = "热词列表", description = "支持按关键词模糊查询")
     public R<List<AdminHotWordVO>> hotWordList(
-            @RequestParam(required = false) String keyword) {
+            @Parameter(description = "关键词模糊") @RequestParam(required = false) String keyword) {
         return R.ok(contentAdminService.hotWordList(keyword));
     }
 
     @PostMapping("/hot-words")
+    @Operation(summary = "新建热词")
     public R<AdminHotWordVO> hotWordCreate(@Valid @RequestBody HotWordCreateDTO dto) {
         return R.ok(contentAdminService.hotWordCreate(dto));
     }
 
     @PutMapping("/hot-words/{id}")
-    public R<AdminHotWordVO> hotWordUpdate(@PathVariable Long id,
+    @Operation(summary = "编辑热词")
+    public R<AdminHotWordVO> hotWordUpdate(@Parameter(description = "热词 ID") @PathVariable Long id,
                                             @Valid @RequestBody HotWordUpdateDTO dto) {
         return R.ok(contentAdminService.hotWordUpdate(id, dto));
     }
 
     @DeleteMapping("/hot-words/{id}")
-    public R<Void> hotWordDelete(@PathVariable Long id) {
+    @Operation(summary = "删除热词")
+    public R<Void> hotWordDelete(@Parameter(description = "热词 ID") @PathVariable Long id) {
         contentAdminService.hotWordDelete(id);
         return R.ok();
     }
@@ -81,35 +91,41 @@ public class AdminContentController {
     // ----- Category -----
 
     @GetMapping("/categories")
+    @Operation(summary = "分类列表（平铺）")
     public R<List<AdminCategoryVO>> categoryList() {
         return R.ok(contentAdminService.categoryList());
     }
 
     @GetMapping("/categories/tree")
+    @Operation(summary = "分类树")
     public R<List<AdminCategoryTreeVO>> categoryTree() {
         return R.ok(contentAdminService.categoryTree());
     }
 
     @PostMapping("/categories")
+    @Operation(summary = "新建分类")
     public R<AdminCategoryVO> categoryCreate(@Valid @RequestBody CategoryCreateDTO dto) {
         return R.ok(contentAdminService.categoryCreate(dto));
     }
 
     @PutMapping("/categories/{id}")
-    public R<AdminCategoryVO> categoryUpdate(@PathVariable Long id,
+    @Operation(summary = "编辑分类")
+    public R<AdminCategoryVO> categoryUpdate(@Parameter(description = "分类 ID") @PathVariable Long id,
                                               @Valid @RequestBody CategoryUpdateDTO dto) {
         return R.ok(contentAdminService.categoryUpdate(id, dto));
     }
 
     @PostMapping("/categories/{id}/status")
-    public R<Void> categoryUpdateStatus(@PathVariable Long id,
+    @Operation(summary = "启停分类")
+    public R<Void> categoryUpdateStatus(@Parameter(description = "分类 ID") @PathVariable Long id,
                                           @Valid @RequestBody CategoryStatusDTO dto) {
         contentAdminService.categoryUpdateStatus(id, dto.getStatus());
         return R.ok();
     }
 
     @DeleteMapping("/categories/{id}")
-    public R<Void> categoryDelete(@PathVariable Long id) {
+    @Operation(summary = "删除分类", description = "有子分类或被商品引用的分类不能删除")
+    public R<Void> categoryDelete(@Parameter(description = "分类 ID") @PathVariable Long id) {
         contentAdminService.categoryDelete(id);
         return R.ok();
     }

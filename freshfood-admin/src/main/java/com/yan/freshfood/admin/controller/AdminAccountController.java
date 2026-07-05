@@ -9,6 +9,8 @@ import com.yan.freshfood.admin.service.AdminAccountService;
 import com.yan.freshfood.admin.vo.AdminAccountVO;
 import com.yan.freshfood.common.response.PageR;
 import com.yan.freshfood.common.response.R;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -31,44 +33,54 @@ public class AdminAccountController {
     private final AdminAccountService adminAccountService;
 
     @GetMapping
+    @Operation(summary = "管理员分页")
     public R<PageR<AdminAccountVO>> page(
-            @RequestParam(required = false) String keyword,
-            @RequestParam(required = false) Integer status,
-            @RequestParam(defaultValue = "1") long pageNum,
-            @RequestParam(defaultValue = "20") long pageSize) {
+            @Parameter(description = "用户名/昵称模糊") @RequestParam(required = false) String keyword,
+            @Parameter(description = "状态") @RequestParam(required = false) Integer status,
+            @Parameter(description = "页码") @RequestParam(defaultValue = "1") long pageNum,
+            @Parameter(description = "页大小") @RequestParam(defaultValue = "20") long pageSize) {
         IPage<AdminAccountVO> page = adminAccountService.page(keyword, status, pageNum, pageSize);
         return R.ok(PageR.of(page));
     }
 
     @GetMapping("/{id}")
-    public R<AdminAccountVO> detail(@PathVariable Long id) {
+    @Operation(summary = "管理员详情")
+    public R<AdminAccountVO> detail(@Parameter(description = "管理员 ID") @PathVariable Long id) {
         return R.ok(adminAccountService.detail(id));
     }
 
     @PostMapping
+    @Operation(summary = "新建管理员")
     public R<AdminAccountVO> create(@Valid @RequestBody AdminCreateDTO dto) {
         return R.ok(adminAccountService.create(dto));
     }
 
     @PutMapping("/{id}")
-    public R<AdminAccountVO> update(@PathVariable Long id, @Valid @RequestBody AdminUpdateDTO dto) {
+    @Operation(summary = "编辑管理员")
+    public R<AdminAccountVO> update(@Parameter(description = "管理员 ID") @PathVariable Long id,
+                                    @Valid @RequestBody AdminUpdateDTO dto) {
         return R.ok(adminAccountService.update(id, dto));
     }
 
     @PostMapping("/{id}/status")
-    public R<Void> updateStatus(@PathVariable Long id, @Valid @RequestBody AdminStatusDTO dto) {
+    @Operation(summary = "启停管理员账号")
+    public R<Void> updateStatus(@Parameter(description = "管理员 ID") @PathVariable Long id,
+                                @Valid @RequestBody AdminStatusDTO dto) {
         adminAccountService.updateStatus(id, dto.getStatus());
         return R.ok();
     }
 
     @PostMapping("/{id}/reset-password")
-    public R<Void> resetPassword(@PathVariable Long id, @Valid @RequestBody AdminResetPasswordDTO dto) {
+    @Operation(summary = "重置管理员密码")
+    public R<Void> resetPassword(@Parameter(description = "管理员 ID") @PathVariable Long id,
+                                  @Valid @RequestBody AdminResetPasswordDTO dto) {
         adminAccountService.resetPassword(id, dto.getPassword());
         return R.ok();
     }
 
     @DeleteMapping("/{id}")
-    public R<Void> delete(@PathVariable Long id) {
+    @Operation(summary = "删除管理员", description = "id=1 的超级管理员不允许删除")
+    public R<Void> delete(@Parameter(description = "管理员 ID") @PathVariable Long id) {
         adminAccountService.delete(id);
         return R.ok();
     }

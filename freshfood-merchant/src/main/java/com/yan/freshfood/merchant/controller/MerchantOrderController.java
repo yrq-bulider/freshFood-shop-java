@@ -4,6 +4,8 @@ import com.yan.freshfood.common.response.PageR;
 import com.yan.freshfood.common.response.R;
 import com.yan.freshfood.merchant.service.MerchantOrderService;
 import com.yan.freshfood.merchant.vo.MerchantOrderVO;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,20 +24,23 @@ public class MerchantOrderController {
     private final MerchantOrderService merchantOrderService;
 
     @GetMapping
+    @Operation(summary = "订单分页")
     public R<PageR<MerchantOrderVO>> page(
-            @RequestParam(required = false) Integer status,
-            @RequestParam(defaultValue = "1") long pageNum,
-            @RequestParam(defaultValue = "10") long pageSize) {
+            @Parameter(description = "订单状态") @RequestParam(required = false) Integer status,
+            @Parameter(description = "页码") @RequestParam(defaultValue = "1") long pageNum,
+            @Parameter(description = "页大小") @RequestParam(defaultValue = "10") long pageSize) {
         return R.ok(merchantOrderService.page(status, pageNum, pageSize));
     }
 
     @GetMapping("/{id}")
-    public R<MerchantOrderVO> detail(@PathVariable Long id) {
+    @Operation(summary = "订单详情")
+    public R<MerchantOrderVO> detail(@Parameter(description = "订单 ID") @PathVariable Long id) {
         return R.ok(merchantOrderService.detail(id));
     }
 
     @PostMapping("/{id}/ship")
-    public R<Void> ship(@PathVariable Long id) {
+    @Operation(summary = "发货", description = "仅待发货（status=2）订单可发货，自动转为待收货")
+    public R<Void> ship(@Parameter(description = "订单 ID") @PathVariable Long id) {
         merchantOrderService.ship(id);
         return R.ok();
     }

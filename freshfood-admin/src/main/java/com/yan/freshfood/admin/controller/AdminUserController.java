@@ -5,6 +5,8 @@ import com.yan.freshfood.admin.service.UserAdminService;
 import com.yan.freshfood.admin.vo.AdminUserVO;
 import com.yan.freshfood.common.response.PageR;
 import com.yan.freshfood.common.response.R;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -25,27 +27,32 @@ public class AdminUserController {
     private final UserAdminService userAdminService;
 
     @GetMapping
+    @Operation(summary = "用户分页")
     public R<PageR<AdminUserVO>> page(
-            @RequestParam(required = false) String keyword,
-            @RequestParam(required = false) Integer status,
-            @RequestParam(defaultValue = "1") long pageNum,
-            @RequestParam(defaultValue = "10") long pageSize) {
+            @Parameter(description = "用户名/昵称/手机号模糊") @RequestParam(required = false) String keyword,
+            @Parameter(description = "状态") @RequestParam(required = false) Integer status,
+            @Parameter(description = "页码") @RequestParam(defaultValue = "1") long pageNum,
+            @Parameter(description = "页大小") @RequestParam(defaultValue = "10") long pageSize) {
         return R.ok(userAdminService.page(keyword, status, pageNum, pageSize));
     }
 
     @GetMapping("/{id}")
-    public R<AdminUserVO> detail(@PathVariable Long id) {
+    @Operation(summary = "用户详情")
+    public R<AdminUserVO> detail(@Parameter(description = "用户 ID") @PathVariable Long id) {
         return R.ok(userAdminService.detail(id));
     }
 
     @PostMapping("/{id}/status")
-    public R<Void> updateStatus(@PathVariable Long id, @Valid @RequestBody UserStatusDTO dto) {
+    @Operation(summary = "启停用户账号")
+    public R<Void> updateStatus(@Parameter(description = "用户 ID") @PathVariable Long id,
+                                @Valid @RequestBody UserStatusDTO dto) {
         userAdminService.updateStatus(id, dto.getStatus());
         return R.ok();
     }
 
     @PostMapping("/{id}/reset-password")
-    public R<Void> resetPassword(@PathVariable Long id) {
+    @Operation(summary = "重置用户密码", description = "重置为默认密码 123456")
+    public R<Void> resetPassword(@Parameter(description = "用户 ID") @PathVariable Long id) {
         userAdminService.resetPassword(id);
         return R.ok();
     }

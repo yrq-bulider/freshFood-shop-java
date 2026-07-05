@@ -5,6 +5,7 @@ import com.yan.freshfood.common.response.R;
 import com.yan.freshfood.merchant.dto.MerchantLoginDTO;
 import com.yan.freshfood.merchant.service.MerchantAuthService;
 import com.yan.freshfood.merchant.vo.MerchantLoginVO;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -25,11 +26,13 @@ public class MerchantAuthController {
      */
     @Deprecated
     @PostMapping("/login")
+    @Operation(summary = "商家登录（兼容老端点）", description = "推荐使用统一登录接口 /api/v1/auth/login")
     public R<MerchantLoginVO> login(@Valid @RequestBody MerchantLoginDTO dto) {
         return R.ok(authService.login(dto));
     }
 
     @PostMapping("/logout")
+    @Operation(summary = "商家登出")
     public R<Void> logout() {
         authService.logout();
         return R.ok();

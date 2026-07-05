@@ -1,27 +1,48 @@
 package com.yan.freshfood.merchant.vo;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
+@Schema(description = "订单详情（商家端）")
 public class MerchantOrderVO {
+
+    @Schema(description = "订单 ID")
     private Long id;
+
+    @Schema(description = "业务订单号")
     private String orderNo;
+
+    @Schema(description = "订单状态：1=待付款 2=待发货 3=待收货 4=待评价 5=已完成 6=售后中 7=已取消")
     private Integer status;
+
+    @Schema(description = "状态文字描述")
     private String statusText;
+
+    @Schema(description = "订单总额（元，字符串）")
     private String totalAmount;
+
+    @Schema(description = "应付金额（元，字符串）")
     private String payableAmount;
-    /** 内嵌明细 */
+
+    @Schema(description = "订单明细列表")
     private List<MerchantOrderItemVO> items;
-    /**
-     * 订单创建时的地址快照 JSON 字符串（不解密 buyer 姓名 / 手机号）。
-     * 前端直接字符串展示即可。
-     */
+
+    @Schema(description = "收货地址快照 JSON 字符串（含收件人/手机号/详细地址）")
     private String addressSnapshot;
+
+    @Schema(description = "买家备注")
     private String remark;
+
+    @Schema(description = "创建时间")
     private LocalDateTime createTime;
+
+    @Schema(description = "支付时间")
     private LocalDateTime payTime;
+
+    @Schema(description = "发货时间")
     private LocalDateTime shipTime;
 }

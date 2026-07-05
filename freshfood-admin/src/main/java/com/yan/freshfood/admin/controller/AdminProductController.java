@@ -6,6 +6,8 @@ import com.yan.freshfood.admin.vo.AdminProductVO;
 import com.yan.freshfood.admin.vo.AuditPendingVO;
 import com.yan.freshfood.common.response.PageR;
 import com.yan.freshfood.common.response.R;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -26,34 +28,40 @@ public class AdminProductController {
     private final ProductAdminService productAdminService;
 
     @GetMapping
+    @Operation(summary = "商品分页")
     public R<PageR<AdminProductVO>> page(
-            @RequestParam(required = false) String keyword,
-            @RequestParam(required = false) Integer auditStatus,
-            @RequestParam(required = false) Integer status,
-            @RequestParam(required = false) Long merchantId,
-            @RequestParam(defaultValue = "1") long pageNum,
-            @RequestParam(defaultValue = "10") long pageSize) {
+            @Parameter(description = "商品名模糊") @RequestParam(required = false) String keyword,
+            @Parameter(description = "审核状态") @RequestParam(required = false) Integer auditStatus,
+            @Parameter(description = "上下架状态") @RequestParam(required = false) Integer status,
+            @Parameter(description = "商家 ID") @RequestParam(required = false) Long merchantId,
+            @Parameter(description = "页码") @RequestParam(defaultValue = "1") long pageNum,
+            @Parameter(description = "页大小") @RequestParam(defaultValue = "10") long pageSize) {
         return R.ok(productAdminService.page(keyword, auditStatus, status, merchantId, pageNum, pageSize));
     }
 
     @GetMapping("/{id}")
-    public R<AdminProductVO> detail(@PathVariable Long id) {
+    @Operation(summary = "商品详情")
+    public R<AdminProductVO> detail(@Parameter(description = "商品 ID") @PathVariable Long id) {
         return R.ok(productAdminService.detail(id));
     }
 
     @PostMapping("/{id}/audit")
-    public R<Void> audit(@PathVariable Long id, @Valid @RequestBody ProductAuditDTO dto) {
+    @Operation(summary = "商品审核", description = "auditStatus=1 通过；=2 拒绝")
+    public R<Void> audit(@Parameter(description = "商品 ID") @PathVariable Long id,
+                         @Valid @RequestBody ProductAuditDTO dto) {
         productAdminService.audit(id, dto.getAuditStatus());
         return R.ok();
     }
 
     @PostMapping("/{id}/off-shelf")
-    public R<Void> offShelf(@PathVariable Long id) {
+    @Operation(summary = "强制下架")
+    public R<Void> offShelf(@Parameter(description = "商品 ID") @PathVariable Long id) {
         productAdminService.offShelf(id);
         return R.ok();
     }
 
     @GetMapping("/audit-pending")
+    @Operation(summary = "待审核商品数量")
     public R<AuditPendingVO> auditPendingCount() {
         return R.ok(productAdminService.auditPendingCount());
     }
