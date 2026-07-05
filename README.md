@@ -4,7 +4,7 @@
 
 ## 项目简介
 
-一个仿"每日优鲜 / 盒马"模式的生鲜电商平台后端，覆盖用户下单、商家运营、平台审核三大主链路，集成 Sa-Token 多端鉴权、MyBatis-Plus 持久化、统一响应体、Bean Validation、Knife4j API 文档等主流技术。
+一个仿"每日优鲜 / 盒马"模式的生鲜电商平台后端，覆盖用户下单、商家运营、平台审核三大主链路，集成 Sa-Token 多端鉴权、MyBatis-Plus 持久化、统一响应体、Bean Validation、springdoc-openapi API 文档等主流技术。
 
 ## 技术栈
 
@@ -17,7 +17,7 @@
 | 数据库 | MySQL | 5.7+ / 8.x |
 | 连接池 | Druid | 1.2.23 |
 | 工具库 | Hutool | 5.8.27 |
-| API 文档 | Knife4j (OpenAPI 3) | 4.5.0 |
+| API 文档 | springdoc-openapi (swagger-ui) | 2.8.15 |
 | 单元测试 | JUnit 5 + Mockito | — |
 | 构建 | Maven | 3.8+ |
 
@@ -109,7 +109,7 @@ mvn -pl freshfood-app -am spring-boot:run
 
 启动成功后访问：
 
-- **API 文档（Knife4j）**：http://localhost:8080/doc.html
+- **API 文档（springdoc swagger-ui）**：http://localhost:8080/swagger-ui.html
 - **健康检查**：http://localhost:8080/
 
 ### 5. 默认演示账号
@@ -122,7 +122,7 @@ mvn -pl freshfood-app -am spring-boot:run
 
 ## API 文档
 
-启动后访问 http://localhost:8080/doc.html 即可看到完整 API 文档，支持：
+启动后访问 http://localhost:8080/swagger-ui.html 即可看到完整 API 文档，支持：
 
 - 三端接口分组（用户 / 商家 / 管理）
 - 在线调试（Try it out）
@@ -171,7 +171,7 @@ curl -X POST http://localhost:8080/api/v1/user/auth/login \
   -H "Content-Type: application/json" \
   -d '{"username":"u01","password":"123456"}'
 
-# 2. 加入购物车 / 下单（具体略，见 knife4j 文档）
+# 2. 加入购物车 / 下单（具体略，见 swagger-ui 文档）
 
 # 3. 商家登录后查看订单并发货
 curl -X POST http://localhost:8080/api/v1/merchant/auth/login \

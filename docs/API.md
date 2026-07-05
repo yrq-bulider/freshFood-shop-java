@@ -1,13 +1,13 @@
 # 线上生鲜商场购物平台 · 接口文档
 
-> 后端 REST 接口全集（90+ 端点）。本文档为前端对接离线参考，详细字段说明请以在线 Knife4j 文档为准。
+> 后端 REST 接口全集（90+ 端点）。本文档为前端对接离线参考，详细字段说明请以在线 swagger-ui 文档为准。
 
 ## 阅读说明
 
 - 基础地址：`http://localhost:8080`
-- 在线文档：http://localhost:8080/doc.html
+- 在线文档：http://localhost:8080/swagger-ui.html
 - 统一登录入口：`POST /api/v1/auth/login`（推荐），按 `user → merchant → admin` 顺序匹配账号
-- 登录态：Sa-Token，Header 携带 `satoken: <token>`（knife4j「Authorize」按钮可一键登录）
+- 登录态：Sa-Token，Header 携带 `satoken: <token>`（swagger-ui「Authorize」按钮可一键登录）
 - 统一响应：`R<T> = { code, msg, data }`，`code = 0` 成功，其余见错误码表
 - 分页响应：`PageR<T> = { total, pages, current, size, records }`
 

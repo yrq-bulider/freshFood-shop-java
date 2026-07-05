@@ -37,6 +37,8 @@
         <sa-token.version>1.45.0</sa-token.version>
         <druid.version>1.2.23</druid.version>
         <knife4j.version>4.5.0</knife4j.version>
+        <!-- knife4j 4.5.0 与 Spring Boot 3.5.x (Spring 6.2) 不兼容：内置 springdoc-openapi 2.3.0 触发 NoSuchMethodError。改用 springdoc-openapi 原生 swagger-ui。 -->
+        <springdoc.version>2.8.15</springdoc.version>
         <hutool.version>5.8.27</hutool.version>
 
         <!-- 覆盖 Spring Boot 3.5.16 默认 plugin 版本：本地 Maven 3.6.1 太老 -->
@@ -134,9 +136,9 @@
             </dependency>
 
             <dependency>
-                <groupId>com.github.xiaoymin</groupId>
-                <artifactId>knife4j-openapi3-jakarta-spring-boot-starter</artifactId>
-                <version>${knife4j.version}</version>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+                <version>${springdoc.version}</version>
             </dependency>
 
             <dependency>

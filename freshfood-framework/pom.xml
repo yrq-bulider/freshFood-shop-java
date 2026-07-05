@@ -60,9 +60,10 @@
             <artifactId>mysql-connector-j</artifactId>
         </dependency>
 
+        <!-- API 文档：springdoc-openapi 原生 swagger-ui（替代 knife4j：knife4j 4.5.0 锁死 springdoc 2.3.0，与 Spring 6.2 不兼容） -->
         <dependency>
-            <groupId>com.github.xiaoymin</groupId>
-            <artifactId>knife4j-openapi3-jakarta-spring-boot-starter</artifactId>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
         </dependency>
 
         <dependency>

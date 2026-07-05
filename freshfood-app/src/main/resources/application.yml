@@ -43,14 +43,15 @@ sa-token:
 springdoc:
   api-docs:
     enabled: true
+    path: /v3/api-docs
   swagger-ui:
     enabled: true
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
   default-flat-param-object: true
-
-knife4j:
-  enable: true
-  setting:
-    language: zh_cn
+  # 不再用 knife4j（4.5.0 与 Spring 6.2 不兼容），用 springdoc 原生 swagger-ui
+  show-actuator: false
 
 logging:
   level:
