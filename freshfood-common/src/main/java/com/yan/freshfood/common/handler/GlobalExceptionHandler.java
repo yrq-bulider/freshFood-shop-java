@@ -8,6 +8,7 @@ import com.yan.freshfood.common.response.R;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -58,6 +59,12 @@ public class GlobalExceptionHandler {
                 .map(ConstraintViolation::getMessage)
                 .collect(Collectors.joining("; "));
         return R.fail(ErrorCode.PARAM_INVALID.getCode(), msg);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public R<Void> handleDataIntegrity(DataIntegrityViolationException e) {
+        log.warn("数据完整性异常: {}", e.getMostSpecificCause().getMessage());
+        return R.fail(ErrorCode.PARAM_INVALID.getCode(), "提交内容与字段约束不符，请检查后重试");
     }
 
     @ExceptionHandler(Exception.class)
