@@ -149,6 +149,7 @@
 
 | Method | Path | 鉴权 | 摘要 |
 |---|---|---|---|
+| POST | `/api/v1/merchant/auth/register` | 否 | 商家入驻申请（默认 auditStatus=0 待审核，审核通过后才能登录） |
 | POST | `/api/v1/merchant/auth/login` | 否 | 商家登录（兼容老端点；推荐统一登录） |
 | POST | `/api/v1/merchant/auth/logout` | 否 | 商家登出（需已登录态，否则 NotLoginException） |
 
