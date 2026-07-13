@@ -11,6 +11,4 @@ public final class CommonConstants {
 
     public static final String TYPE_USER = "user";
     public static final String TYPE_MERCHANT = "merchant";
-
-    public static final String DEFAULT_PASSWORD = "123456";
 }
