@@ -51,4 +51,10 @@ public class MerchantOrderVO {
 
     @Schema(description = "发货时间")
     private LocalDateTime shipTime;
+
+    @Schema(description = "物流单号")
+    private String trackingNo;
+
+    @Schema(description = "物流公司")
+    private String carrier;
 }

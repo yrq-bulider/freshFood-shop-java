@@ -9,6 +9,7 @@ import com.yan.freshfood.common.exception.ErrorCode;
 import com.yan.freshfood.common.response.PageR;
 import com.yan.freshfood.user.mapper.OrderItemMapper;
 import com.yan.freshfood.user.mapper.OrderMapper;
+import com.yan.freshfood.merchant.dto.ShipDTO;
 import com.yan.freshfood.merchant.service.MerchantOrderService;
 import com.yan.freshfood.merchant.vo.MerchantOrderItemVO;
 import com.yan.freshfood.merchant.vo.MerchantOrderVO;
@@ -74,7 +75,7 @@ public class MerchantOrderServiceImpl implements MerchantOrderService {
 
     @Override
     @Transactional
-    public void ship(Long id) {
+    public void ship(Long id, ShipDTO dto) {
         Long mid = currentMerchantId();
         OrderDO order = orderMapper.selectById(id);
         if (order == null || !order.getMerchantId().equals(mid)) {
@@ -85,6 +86,8 @@ public class MerchantOrderServiceImpl implements MerchantOrderService {
         }
         order.setStatus(3);
         order.setShipTime(LocalDateTime.now());
+        order.setTrackingNo(dto.getTrackingNo());
+        order.setCarrier(dto.getCarrier());
         orderMapper.updateById(order);
     }
 
@@ -103,6 +106,8 @@ public class MerchantOrderServiceImpl implements MerchantOrderService {
         vo.setCreateTime(o.getCreateTime());
         vo.setPayTime(o.getPayTime());
         vo.setShipTime(o.getShipTime());
+        vo.setTrackingNo(o.getTrackingNo());
+        vo.setCarrier(o.getCarrier());
         if (items != null) {
             vo.setItems(items.stream().map(it -> {
                 MerchantOrderItemVO v = new MerchantOrderItemVO();

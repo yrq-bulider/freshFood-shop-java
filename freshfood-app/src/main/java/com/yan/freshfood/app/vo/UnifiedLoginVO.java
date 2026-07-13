@@ -14,9 +14,9 @@ public class UnifiedLoginVO {
     @Schema(description = "登录令牌")
     private String token;
 
-    @Schema(description = "账号角色", allowableValues = {"USER", "MERCHANT", "ADMIN"})
+    @Schema(description = "账号角色", allowableValues = {"USER", "MERCHANT"})
     private String role;
 
-    @Schema(description = "账号基本信息；字段集合按 role 变化：USER 含 nickname/avatar，MERCHANT 含 shopName/contactName/logo，ADMIN 含 nickname")
+    @Schema(description = "账号基本信息；字段集合按 role 变化：USER 含 nickname/avatar，MERCHANT 含 shopName/contactName/logo")
     private Object profile;
 }

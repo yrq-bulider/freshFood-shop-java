@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-@Tag(name = "统一登录", description = "用户/商家/管理员统一登录入口")
+@Tag(name = "统一登录", description = "用户/商家统一登录入口")
 @SaIgnore
 @RestController
 @RequiredArgsConstructor
@@ -22,7 +22,7 @@ public class UnifiedAuthController {
     private final UnifiedAuthService unifiedAuthService;
 
     @PostMapping("/api/v1/auth/login")
-    @Operation(summary = "统一登录", description = "按 user → merchant → admin 顺序匹配；返回 token、role、profile。无需登录鉴权。")
+    @Operation(summary = "统一登录", description = "按 user → merchant 顺序匹配账号；返回 token、role、profile。无需登录鉴权。")
     public R<UnifiedLoginVO> login(@Valid @RequestBody LoginDTO dto) {
         return R.ok(unifiedAuthService.login(dto.getUsername(), dto.getPassword()));
     }
