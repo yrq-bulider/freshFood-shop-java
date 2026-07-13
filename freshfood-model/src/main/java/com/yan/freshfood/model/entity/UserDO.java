@@ -22,6 +22,9 @@ public class UserDO extends BaseDO {
     @TableField(typeHandler = EncryptedStringTypeHandler.class)
     private String email;
 
+    /** 1 商家 / 2 买家 */
+    private Integer role;
+
     /** 0 禁用 / 1 正常 */
     private Integer status;
 }

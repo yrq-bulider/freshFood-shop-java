@@ -3,6 +3,7 @@
 -- 9 张表，覆盖用户端 + 商家端主链路
 -- 数据库：freshfood_shop
 -- 演示账号通过 /api/v1/auth/register 自助创建（密码统一 123456）
+-- 2026-07-13 重构：合并 user/merchant 为单 user 表 + role 字段；商家扩展信息拆到 merchant_profile
 -- ========================================
 
 CREATE DATABASE IF NOT EXISTS freshfood_shop
@@ -21,45 +22,45 @@ DROP TABLE IF EXISTS `cart`;
 DROP TABLE IF EXISTS `sku`;
 DROP TABLE IF EXISTS `product`;
 DROP TABLE IF EXISTS `category`;
-DROP TABLE IF EXISTS `merchant`;
+DROP TABLE IF EXISTS `merchant_profile`;
 DROP TABLE IF EXISTS `user`;
 
 -- ============================================================
--- 1. 账号表（2 张）
+-- 1. 账号表（1 张 user + 1 张 merchant_profile）
 -- ============================================================
 
 CREATE TABLE `user` (
     `id`          BIGINT       NOT NULL AUTO_INCREMENT COMMENT '主键',
     `username`    VARCHAR(50)  NOT NULL COMMENT '用户名',
     `password`    VARCHAR(100) NOT NULL COMMENT '密码（BCrypt）',
-    `nickname`    VARCHAR(50)  DEFAULT NULL COMMENT '昵称',
+    `nickname`    VARCHAR(50)  DEFAULT NULL COMMENT '昵称（买家用）',
     `avatar`      VARCHAR(255) DEFAULT NULL COMMENT '头像 URL',
     `phone`       VARCHAR(255) DEFAULT NULL COMMENT '手机号（AES-256-CBC 加密，Base64）',
     `email`       VARCHAR(255) DEFAULT NULL COMMENT '邮箱（AES-256-CBC 加密，Base64）',
+    `role`        TINYINT      NOT NULL DEFAULT 2 COMMENT '1 商家 / 2 买家',
     `status`      TINYINT      NOT NULL DEFAULT 1 COMMENT '0 禁用 / 1 正常',
     `create_time` DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `update_time` DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     `deleted`     TINYINT      NOT NULL DEFAULT 0,
     PRIMARY KEY (`id`),
-    UNIQUE KEY `uk_username` (`username`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户表';
+    UNIQUE KEY `uk_username` (`username`),
+    KEY `idx_role` (`role`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='账号表（含买家与商家，role 区分）';
 
-CREATE TABLE `merchant` (
-    `id`             BIGINT       NOT NULL AUTO_INCREMENT,
-    `username`       VARCHAR(50)  NOT NULL,
-    `password`       VARCHAR(100) NOT NULL,
-    `shop_name`      VARCHAR(100) NOT NULL COMMENT '店铺名',
-    `contact_name`   VARCHAR(255) DEFAULT NULL COMMENT '联系人（AES-256-CBC 加密）',
-    `contact_phone`  VARCHAR(255) DEFAULT NULL COMMENT '联系电话（AES-256-CBC 加密）',
-    `logo`           VARCHAR(255) DEFAULT NULL,
-    `audit_status`   TINYINT      NOT NULL DEFAULT 1 COMMENT '0 待审核 / 1 通过 / 2 拒绝（演示数据默认通过）',
-    `status`         TINYINT      NOT NULL DEFAULT 1,
-    `create_time`    DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `update_time`    DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `deleted`        TINYINT      NOT NULL DEFAULT 0,
+CREATE TABLE `merchant_profile` (
+    `id`            BIGINT       NOT NULL AUTO_INCREMENT,
+    `user_id`       BIGINT       NOT NULL COMMENT '关联 user.id（role=1 商家）',
+    `shop_name`     VARCHAR(100) NOT NULL COMMENT '店铺名',
+    `contact_name`  VARCHAR(255) DEFAULT NULL COMMENT '联系人（AES-256-CBC 加密）',
+    `contact_phone` VARCHAR(255) DEFAULT NULL COMMENT '联系电话（AES-256-CBC 加密）',
+    `logo`          VARCHAR(255) DEFAULT NULL,
+    `audit_status`  TINYINT      NOT NULL DEFAULT 1 COMMENT '0 待审核 / 1 通过 / 2 拒绝（演示数据默认通过）',
+    `create_time`   DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `update_time`   DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `deleted`       TINYINT      NOT NULL DEFAULT 0,
     PRIMARY KEY (`id`),
-    UNIQUE KEY `uk_username` (`username`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='商家表';
+    UNIQUE KEY `uk_user_id` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='商家扩展信息（1:1 关联 user）';
 
 -- ============================================================
 -- 2. 商品域（3 张）

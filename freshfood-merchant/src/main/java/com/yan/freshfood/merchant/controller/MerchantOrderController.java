@@ -1,5 +1,7 @@
 package com.yan.freshfood.merchant.controller;
 
+import cn.dev33.satoken.annotation.SaCheckRole;
+import com.yan.freshfood.common.constant.CommonConstants;
 import com.yan.freshfood.common.response.PageR;
 import com.yan.freshfood.common.response.R;
 import com.yan.freshfood.merchant.dto.ShipDTO;
@@ -12,7 +14,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-@Tag(name = "商家端-订单", description = "商家查看订单、发货")
+@Tag(name = "商家端-订单", description = "商家查看订单、发货（仅 role=MERCHANT 账号可访问）")
+@SaCheckRole(CommonConstants.ROLE_MERCHANT)
 @RestController
 @RequestMapping("/api/v1/merchant/orders")
 @RequiredArgsConstructor

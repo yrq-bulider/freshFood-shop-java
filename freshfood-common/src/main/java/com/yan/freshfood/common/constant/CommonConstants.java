@@ -6,9 +6,11 @@ public final class CommonConstants {
 
     public static final String TOKEN_HEADER = "satoken";
 
-    public static final String ROLE_USER = "user";
-    public static final String ROLE_MERCHANT = "merchant";
+    /** 单 Sa-Token 体系下，前端用到的角色字符串（@SaCheckRole 用） */
+    public static final String ROLE_USER = "USER";
+    public static final String ROLE_MERCHANT = "MERCHANT";
 
-    public static final String TYPE_USER = "user";
-    public static final String TYPE_MERCHANT = "merchant";
+    /** user.role 数据库字段值：1 商家 / 2 买家 */
+    public static final int ROLE_DB_MERCHANT = 1;
+    public static final int ROLE_DB_BUYER = 2;
 }

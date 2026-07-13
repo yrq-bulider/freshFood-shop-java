@@ -8,11 +8,11 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-@TableName(value = "merchant", autoResultMap = true)
-public class MerchantDO extends BaseDO {
+@TableName(value = "merchant_profile", autoResultMap = true)
+public class MerchantProfileDO extends BaseDO {
 
-    private String username;
-    private String password;
+    private Long userId;
+
     private String shopName;
 
     @TableField(typeHandler = EncryptedStringTypeHandler.class)
@@ -22,8 +22,7 @@ public class MerchantDO extends BaseDO {
     private String contactPhone;
 
     private String logo;
-    /** 0 待审核 / 1 已通过 / 2 已拒绝 */
+
+    /** 0 待审核 / 1 通过 / 2 拒绝 */
     private Integer auditStatus;
-    /** 0 禁用 / 1 正常 */
-    private Integer status;
 }

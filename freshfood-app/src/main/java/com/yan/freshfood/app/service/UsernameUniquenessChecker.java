@@ -2,7 +2,6 @@ package com.yan.freshfood.app.service;
 
 import com.yan.freshfood.common.exception.BusinessException;
 import com.yan.freshfood.common.exception.ErrorCode;
-import com.yan.freshfood.merchant.mapper.MerchantMapper;
 import com.yan.freshfood.user.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -12,11 +11,9 @@ import org.springframework.stereotype.Service;
 public class UsernameUniquenessChecker {
 
     private final UserMapper userMapper;
-    private final MerchantMapper merchantMapper;
 
     public void checkAvailable(String username) {
-        if (userMapper.countByUsername(username) > 0
-                || merchantMapper.countByUsername(username) > 0) {
+        if (userMapper.countByUsername(username) > 0) {
             throw new BusinessException(ErrorCode.GLOBAL_USERNAME_EXISTS);
         }
     }

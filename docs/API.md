@@ -4,7 +4,7 @@
 >
 > 精简日期：2026-07-13。设计依据：`docs/superpowers/specs/2026-07-11-freshfood-simplify-design.md`
 >
-> 本版本修正：① 删除不存在的端点 ② 状态流转字段对齐代码 ③ 补全错误码 ④ 补全每个端点 JSON 样例 ⑤ 新增启动清单
+> 本版本修正：① 删除不存在的端点 ② 状态流转字段对齐代码 ③ 补全错误码 ④ 补全每个端点 JSON 样例 ⑤ 新增启动清单 ⑥ **合并 user/merchant 为单 user 表 + role 字段（1=商家/2=买家）；单 Sa-Token 体系；统一单注册端点 + role 参数；22→19**
 
 ---
 
@@ -44,11 +44,12 @@
 
 ### 1.2 鉴权
 
-- 框架：Sa-Token
+- 框架：Sa-Token（**单 StpLogic 体系**）
 - 登录态：Header `satoken: <token>`
 - 公开接口（`@SaIgnore`）：注册、登录、统一登录、首页分类、商品详情、搜索、登出无需 token
 - 受保护接口：未携带 / 过期 → HTTP 401，body `{"code":401,"msg":"未登录"}`
-- 多端隔离：`user` / `merchant` 两套 StpLogic，**token 互不通用**——商家 token 调用户端接口会 403
+- 角色隔离：商家端接口（`/api/v1/merchant/*`）加 `@SaCheckRole("MERCHANT")`，非商家账号 token 调商家接口 → HTTP 403
+- 账号统一在 `user` 表，**role 字段区分**（1=商家/2=买家）；不再有 `merchant` 表
 
 ### 1.3 统一响应
 
@@ -120,8 +121,13 @@
 | 18 | 商家-订单 | GET | `/api/v1/merchant/orders/{id}` | 是 |
 | 19 | 商家-订单 | POST | `/api/v1/merchant/orders/{id}/ship` | 是 |
 
-**统一登录** = 用户 + 商家通用入口，**没有独立的用户登录 / 商家登录端点**。
-所有账号都通过 `POST /api/v1/auth/login` 登录，后端按 `user → merchant` 顺序匹配。
+**单一注册端点**：
+- `POST /api/v1/auth/register`：body 加 `role` 字段（1=商家 / 2=买家），不传默认 2 买家；注册成功立即登录返回 token
+- 商家注册时多带：`shopName`（必填）、`contactName`、`contactPhone`、`logo`（都可选；联系方式 AES 加密存 `merchant_profile`）
+
+**单一登录入口**：
+- `POST /api/v1/auth/login`：单 user 表查，命中后看 `role` 字段返回 `role: "MERCHANT"` 或 `"USER"`
+- 前端不用选身份，不用选端点，看响应 `role` 字段决定路由
 
 ---
 
@@ -169,7 +175,7 @@
 |---|---|
 | `token` | 登录令牌，后续请求 Header `satoken: <token>` |
 | `role` | `USER` / `MERCHANT` |
-| `profile` | USER 含 `userId/username/nickname/avatar`；MERCHANT 含 `id/username/shopName/contactName/contactPhone/logo/auditStatus/status` |
+| `profile` | USER 含 `id/username/nickname/avatar/role(2)/createTime`；MERCHANT 含同字段 + `shopName/logo/contactName/contactPhone`（来自 `merchant_profile`） |
 
 ---
 
@@ -178,14 +184,29 @@
 #### ② `POST /api/v1/auth/register`
 
 - **鉴权**：否
-- **请求体**（`RegisterDTO`）：
+- **请求体**（`RegisterDTO`，**统一买家 + 商家注册入口**）：
 
+**买家示例**（`role` 不传默认 2）：
 ```json
 {
   "username": "wangwu",
   "password": "123456",
   "nickname": "王五",
-  "phone": "13800138000"
+  "phone": "13800138000",
+  "role": 2
+}
+```
+
+**商家示例**（`role: 1`，必带 `shopName`）：
+```json
+{
+  "username": "m_shop_02",
+  "password": "123456",
+  "role": 1,
+  "shopName": "鲜果园旗舰店",
+  "contactName": "张三",
+  "contactPhone": "13800138000",
+  "logo": "https://cdn.example.com/logo.png"
 }
 ```
 
@@ -193,16 +214,26 @@
 |---|---|---|
 | `username` | 是 | 3-20 字符 |
 | `password` | 是 | 6-20 字符 |
-| `nickname` | 否 | - |
+| `nickname` | 否 | 仅买家展示 |
 | `phone` | 否 | `^1[3-9]\d{9}$` |
+| `role` | 否 | `1`（商家）/ `2`（买家）；不传默认 2；写库到 `user.role` |
+| `shopName` | role=1 时必填 | ≤ 100 字符，写 `merchant_profile` |
+| `contactName` | 否 | AES-256-CBC 加密 |
+| `contactPhone` | 否 | `^1[3-9]\d{9}$`，AES-256-CBC 加密 |
+| `logo` | 否 | 店铺 logo URL |
 
-- **响应**：同登录 `UnifiedLoginVO`（`role: "USER"`）
+- **行为**：用户名查重（`user` 表）→ 用户名重复 `2004`；商家注册默认 `audit_status=1` 通过；注册成功立即登录返回 token。
+- **响应**：`UnifiedLoginVO`：
+  - 买家：`role: "USER"`、`profile.role=2`
+  - 商家：`role: "MERCHANT"`、`profile.role=1` + `shopName/logo/contactName/contactPhone`
 
 #### ③ `POST /api/v1/auth/logout`
 
-- **鉴权**：是（需 USER token）
+- **鉴权**：是（任意账号 token）
 - **请求体**：无
 - **响应**：`{"code":0,"msg":"ok","data":null}`
+
+> 商家和买家共用同一个 logout 端点（不再有商家独立 logout）
 
 ---
 
