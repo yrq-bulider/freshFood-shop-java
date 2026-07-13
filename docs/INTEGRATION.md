@@ -531,7 +531,6 @@ JS `new Date('2026-07-13T12:30:00')` 直接可解析。
 | 订单状态 `confirm` 文档写 3→4→5，实际 3→4 | 文档已对齐 | `96bd61d` |
 | `UnifiedLoginVO.role` 之前含 `ADMIN` | 已删 | `96bd61d` |
 | 商家订单 VO 没 `trackingNo` / `carrier` 字段 | 已补 | `96bd61d` |
-| 商家端之前没有注册端点（前端必须复用演示账号） | 已补 `/api/v1/merchant/auth/register` | （已撤回，见下方） |
 | **架构重构**：user/merchant 两表合并为单 `user` 表 + `role` 字段；商家扩展拆 `merchant_profile`；Sa-Token 单 StpLogic + `@SaCheckRole`；统一单注册端点 `/api/v1/auth/register` 加 `role` 参数；`/api/v1/merchant/auth/*` 3 个端点全部删除；22→19 | 本次 |
 
 **重构带来的影响（前端要知道）**：
