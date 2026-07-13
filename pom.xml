@@ -24,7 +24,6 @@
         <module>freshfood-model</module>
         <module>freshfood-user</module>
         <module>freshfood-merchant</module>
-        <module>freshfood-admin</module>
         <module>freshfood-app</module>
     </modules>
 
@@ -77,11 +76,6 @@
             <dependency>
                 <groupId>com.yan</groupId>
                 <artifactId>freshfood-merchant</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.yan</groupId>
-                <artifactId>freshfood-admin</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

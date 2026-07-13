@@ -1,9 +1,6 @@
 package com.yan.freshfood.app.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.yan.freshfood.admin.mapper.AdminMapper;
-import com.yan.freshfood.admin.service.AdminAuthService;
-import com.yan.freshfood.admin.vo.AdminLoginVO;
 import com.yan.freshfood.app.service.UnifiedAuthService;
 import com.yan.freshfood.app.vo.UnifiedLoginVO;
 import com.yan.freshfood.common.exception.BusinessException;
@@ -11,7 +8,6 @@ import com.yan.freshfood.common.exception.ErrorCode;
 import com.yan.freshfood.merchant.mapper.MerchantMapper;
 import com.yan.freshfood.merchant.service.MerchantAuthService;
 import com.yan.freshfood.merchant.vo.MerchantLoginVO;
-import com.yan.freshfood.model.entity.AdminDO;
 import com.yan.freshfood.model.entity.MerchantDO;
 import com.yan.freshfood.model.entity.UserDO;
 import com.yan.freshfood.user.mapper.UserMapper;
@@ -26,10 +22,8 @@ public class UnifiedAuthServiceImpl implements UnifiedAuthService {
 
     private final UserMapper userMapper;
     private final MerchantMapper merchantMapper;
-    private final AdminMapper adminMapper;
     private final AuthService userAuthService;
     private final MerchantAuthService merchantAuthService;
-    private final AdminAuthService adminAuthService;
 
     @Override
     public UnifiedLoginVO login(String username, String rawPassword) {
@@ -46,13 +40,6 @@ public class UnifiedAuthServiceImpl implements UnifiedAuthService {
             if (merchant != null) {
                 MerchantLoginVO vo = merchantAuthService.doLogin(merchant, rawPassword);
                 return new UnifiedLoginVO(vo.getToken(), "MERCHANT", vo.getMerchant());
-            }
-
-            AdminDO admin = adminMapper.selectOne(
-                    new LambdaQueryWrapper<AdminDO>().eq(AdminDO::getUsername, username));
-            if (admin != null) {
-                AdminLoginVO vo = adminAuthService.doLogin(admin, rawPassword);
-                return new UnifiedLoginVO(vo.getToken(), "ADMIN", vo.getAdmin());
             }
         } catch (BusinessException e) {
             // 统一对外抛 LOGIN_FAILED，避免泄露账号是否存在 / 禁用 / 待审核 等信息（anti-enumeration）

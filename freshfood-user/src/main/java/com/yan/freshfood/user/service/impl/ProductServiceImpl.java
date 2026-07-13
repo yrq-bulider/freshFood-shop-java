@@ -2,10 +2,8 @@ package com.yan.freshfood.user.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yan.freshfood.common.exception.BusinessException;
 import com.yan.freshfood.common.exception.ErrorCode;
-import com.yan.freshfood.common.response.PageR;
 import com.yan.freshfood.model.entity.content.ReviewDO;
 import com.yan.freshfood.model.entity.product.ProductDO;
 import com.yan.freshfood.model.entity.product.SkuDO;
@@ -19,12 +17,16 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
+
+    private static final int TOP_REVIEWS = 10;
 
     private final ProductMapper productMapper;
     private final SkuMapper skuMapper;
@@ -64,19 +66,19 @@ public class ProductServiceImpl implements ProductService {
         }).collect(Collectors.toList()));
         vo.setSpecs(Collections.emptyList());
         vo.setRatingStats(calcRatingStats(productId));
+        vo.setReviews(listTopReviews(productId, TOP_REVIEWS));
         return vo;
     }
 
-    @Override
-    public PageR<ReviewVO> listReviews(Long productId, int pageNum, int pageSize) {
-        Page<ReviewDO> page = reviewMapper.selectPage(
-                new Page<>(pageNum, pageSize),
+    private List<ReviewVO> listTopReviews(Long productId, int limit) {
+        List<ReviewDO> rows = reviewMapper.selectList(
                 new LambdaQueryWrapper<ReviewDO>()
                         .eq(ReviewDO::getProductId, productId)
                         .eq(ReviewDO::getStatus, 1)
                         .orderByDesc(ReviewDO::getCreateTime)
+                        .last("LIMIT " + limit)
         );
-        List<ReviewVO> list = page.getRecords().stream().map(r -> {
+        return rows.stream().map(r -> {
             ReviewVO v = new ReviewVO();
             BeanUtil.copyProperties(r, v, "images");
             v.setImages(r.getImages() == null
@@ -84,46 +86,6 @@ public class ProductServiceImpl implements ProductService {
                     : Arrays.asList(r.getImages().split(",")));
             return v;
         }).collect(Collectors.toList());
-        PageR<ReviewVO> r = new PageR<>();
-        r.setList(list);
-        r.setTotal(page.getTotal());
-        r.setPageNum((int) page.getCurrent());
-        r.setPageSize((int) page.getSize());
-        r.setPages((int) page.getPages());
-        return r;
-    }
-
-    @Override
-    public List<ProductSimpleVO> listRecommendations(Long productId) {
-        ProductDO p = productMapper.selectById(productId);
-        if (p == null) return Collections.emptyList();
-        List<ProductDO> list = productMapper.selectList(
-                new LambdaQueryWrapper<ProductDO>()
-                        .eq(ProductDO::getCategoryId, p.getCategoryId())
-                        .eq(ProductDO::getStatus, 1)
-                        .ne(ProductDO::getId, productId)
-                        .orderByDesc(ProductDO::getSales)
-                        .last("LIMIT 6")
-        );
-        return list.stream().map(this::toSimple).collect(Collectors.toList());
-    }
-
-    private ProductSimpleVO toSimple(ProductDO p) {
-        ProductSimpleVO v = new ProductSimpleVO();
-        v.setProductId(p.getId());
-        v.setName(p.getName());
-        v.setMainImage(p.getMainImage());
-        v.setOrigin(p.getOrigin());
-        v.setSales(p.getSales());
-        v.setRating(p.getRating());
-        SkuDO minSku = skuMapper.selectOne(
-                new LambdaQueryWrapper<SkuDO>()
-                        .eq(SkuDO::getProductId, p.getId())
-                        .orderByAsc(SkuDO::getPrice)
-                        .last("LIMIT 1")
-        );
-        v.setMinPrice(minSku != null ? minSku.getPrice() : null);
-        return v;
     }
 
     private RatingStatsVO calcRatingStats(Long productId) {

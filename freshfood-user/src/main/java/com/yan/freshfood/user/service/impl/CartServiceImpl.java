@@ -19,7 +19,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -146,40 +150,5 @@ public class CartServiceImpl implements CartService {
                         .eq(CartDO::getId, cartId)
                         .eq(CartDO::getUserId, userId)
         );
-    }
-
-    @Override
-    public void deleteBatch(List<Long> cartIds) {
-        if (cartIds == null || cartIds.isEmpty()) return;
-        Long userId = StpUtil.getLoginIdAsLong();
-        cartMapper.delete(
-                new LambdaQueryWrapper<CartDO>()
-                        .in(CartDO::getId, cartIds)
-                        .eq(CartDO::getUserId, userId)
-        );
-    }
-
-    @Override
-    public void toggleSelect(Long cartId, Boolean selected) {
-        Long userId = StpUtil.getLoginIdAsLong();
-        CartDO c = cartMapper.selectById(cartId);
-        if (c == null || !c.getUserId().equals(userId)) {
-            throw new BusinessException(ErrorCode.NOT_FOUND);
-        }
-        c.setSelected(Boolean.TRUE.equals(selected) ? 1 : 0);
-        cartMapper.updateById(c);
-    }
-
-    @Override
-    public void toggleSelectAll(Boolean selected) {
-        Long userId = StpUtil.getLoginIdAsLong();
-        List<CartDO> list = cartMapper.selectList(
-                new LambdaQueryWrapper<CartDO>().eq(CartDO::getUserId, userId)
-        );
-        int v = Boolean.TRUE.equals(selected) ? 1 : 0;
-        for (CartDO c : list) {
-            c.setSelected(v);
-            cartMapper.updateById(c);
-        }
     }
 }

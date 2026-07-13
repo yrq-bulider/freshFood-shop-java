@@ -6,8 +6,8 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-@Schema(description = "当前登录用户信息")
-public class UserVO {
+@Schema(description = "用户基本信息")
+public class UserProfileVO {
 
     @Schema(description = "用户 ID")
     private Long id;
@@ -20,12 +20,6 @@ public class UserVO {
 
     @Schema(description = "头像 URL")
     private String avatar;
-
-    @Schema(description = "手机号")
-    private String phone;
-
-    @Schema(description = "邮箱")
-    private String email;
 
     @Schema(description = "注册时间")
     private LocalDateTime createTime;
