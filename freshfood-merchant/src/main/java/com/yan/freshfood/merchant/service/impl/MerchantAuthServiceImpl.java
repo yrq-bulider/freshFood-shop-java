@@ -8,7 +8,6 @@ import com.yan.freshfood.common.constant.CommonConstants;
 import com.yan.freshfood.common.exception.BusinessException;
 import com.yan.freshfood.common.exception.ErrorCode;
 import com.yan.freshfood.merchant.dto.MerchantLoginDTO;
-import com.yan.freshfood.merchant.dto.MerchantRegisterDTO;
 import com.yan.freshfood.merchant.mapper.MerchantMapper;
 import com.yan.freshfood.merchant.service.MerchantAuthService;
 import com.yan.freshfood.merchant.vo.MerchantLoginVO;
@@ -48,24 +47,6 @@ public class MerchantAuthServiceImpl implements MerchantAuthService {
         StpLogic logic = SaManager.getStpLogic(CommonConstants.TYPE_MERCHANT);
         logic.login(m.getId());
         return new MerchantLoginVO(logic.getTokenValue(), toVO(m));
-    }
-
-    @Override
-    public MerchantVO register(MerchantRegisterDTO dto) {
-        if (merchantMapper.countByUsername(dto.getUsername()) > 0) {
-            throw new BusinessException(ErrorCode.USER_ALREADY_EXISTS);
-        }
-        MerchantDO m = new MerchantDO();
-        m.setUsername(dto.getUsername());
-        m.setPassword(BCrypt.hashpw(dto.getPassword(), BCrypt.gensalt()));
-        m.setShopName(dto.getShopName());
-        m.setContactName(dto.getContactName());
-        m.setContactPhone(dto.getContactPhone());
-        m.setLogo(dto.getLogo());
-        m.setAuditStatus(0); // 待审核
-        m.setStatus(1);     // 默认启用（待审核通过后即可登录）
-        merchantMapper.insert(m);
-        return toVO(m);
     }
 
     @Override

@@ -16,7 +16,7 @@ public class MerchantOrderVO {
     @Schema(description = "业务订单号")
     private String orderNo;
 
-    @Schema(description = "订单状态：1=待付款 2=待发货 3=待收货 4=待评价 5=已完成 6=售后中 7=已取消")
+    @Schema(description = "订单状态：1=待付款 2=待发货 3=待收货 4=已完成 5=已取消")
     private Integer status;
 
     @Schema(description = "状态文字描述")
@@ -31,8 +31,14 @@ public class MerchantOrderVO {
     @Schema(description = "订单明细列表")
     private List<MerchantOrderItemVO> items;
 
-    @Schema(description = "收货地址快照 JSON 字符串（含收件人/手机号/详细地址）")
-    private String addressSnapshot;
+    @Schema(description = "收货人姓名")
+    private String receiverName;
+
+    @Schema(description = "收货人手机号")
+    private String receiverPhone;
+
+    @Schema(description = "收货地址")
+    private String receiverAddress;
 
     @Schema(description = "买家备注")
     private String remark;

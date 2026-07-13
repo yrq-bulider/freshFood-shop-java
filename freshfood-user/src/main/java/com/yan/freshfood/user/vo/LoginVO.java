@@ -15,5 +15,5 @@ public class LoginVO {
     private String token;
 
     @Schema(description = "当前用户基本信息")
-    private UserVO user;
+    private UserProfileVO user;
 }

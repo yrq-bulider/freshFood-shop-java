@@ -36,10 +36,8 @@ public class MerchantOrderServiceImpl implements MerchantOrderService {
         STATUS_TEXT.put(1, "待付款");
         STATUS_TEXT.put(2, "待发货");
         STATUS_TEXT.put(3, "待收货");
-        STATUS_TEXT.put(4, "待评价");
-        STATUS_TEXT.put(5, "已完成");
-        STATUS_TEXT.put(6, "售后中");
-        STATUS_TEXT.put(7, "已取消");
+        STATUS_TEXT.put(4, "已完成");
+        STATUS_TEXT.put(5, "已取消");
     }
 
     @Override
@@ -85,7 +83,7 @@ public class MerchantOrderServiceImpl implements MerchantOrderService {
         if (order.getStatus() == null || order.getStatus() != 2) {
             throw new BusinessException(ErrorCode.ORDER_STATUS_INVALID);
         }
-        order.setStatus(3); // 待收货
+        order.setStatus(3);
         order.setShipTime(LocalDateTime.now());
         orderMapper.updateById(order);
     }
@@ -98,7 +96,9 @@ public class MerchantOrderServiceImpl implements MerchantOrderService {
         vo.setStatusText(STATUS_TEXT.getOrDefault(o.getStatus(), "未知"));
         vo.setTotalAmount(o.getTotalAmount() == null ? null : o.getTotalAmount().toPlainString());
         vo.setPayableAmount(o.getPayableAmount() == null ? null : o.getPayableAmount().toPlainString());
-        vo.setAddressSnapshot(o.getAddressSnapshot());
+        vo.setReceiverName(o.getReceiverName());
+        vo.setReceiverPhone(o.getReceiverPhone());
+        vo.setReceiverAddress(o.getReceiverAddress());
         vo.setRemark(o.getRemark());
         vo.setCreateTime(o.getCreateTime());
         vo.setPayTime(o.getPayTime());

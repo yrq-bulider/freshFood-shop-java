@@ -11,7 +11,7 @@ import com.yan.freshfood.user.dto.RegisterDTO;
 import com.yan.freshfood.user.mapper.UserMapper;
 import com.yan.freshfood.user.service.AuthService;
 import com.yan.freshfood.user.vo.LoginVO;
-import com.yan.freshfood.user.vo.UserVO;
+import com.yan.freshfood.user.vo.UserProfileVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -70,14 +70,12 @@ public class AuthServiceImpl implements AuthService {
         StpUtil.logout();
     }
 
-    private UserVO toVO(UserDO user) {
-        UserVO vo = new UserVO();
+    private UserProfileVO toVO(UserDO user) {
+        UserProfileVO vo = new UserProfileVO();
         vo.setId(user.getId());
         vo.setUsername(user.getUsername());
         vo.setNickname(user.getNickname());
         vo.setAvatar(user.getAvatar());
-        vo.setPhone(user.getPhone());
-        vo.setEmail(user.getEmail());
         vo.setCreateTime(user.getCreateTime());
         return vo;
     }

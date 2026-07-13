@@ -41,4 +41,7 @@ public class ProductDetailVO {
 
     @Schema(description = "评价统计汇总")
     private RatingStatsVO ratingStats;
+
+    @Schema(description = "最近评价列表（精简版：首屏展示前 10 条）")
+    private List<ReviewVO> reviews;
 }

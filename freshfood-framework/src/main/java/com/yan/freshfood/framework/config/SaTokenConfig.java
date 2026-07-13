@@ -19,9 +19,4 @@ public class SaTokenConfig {
     public StpLogic stpMerchantLogic() {
         return new StpLogic(CommonConstants.TYPE_MERCHANT);
     }
-
-    @Bean(name = "stpAdminLogic")
-    public StpLogic stpAdminLogic() {
-        return new StpLogic(CommonConstants.TYPE_ADMIN);
-    }
 }

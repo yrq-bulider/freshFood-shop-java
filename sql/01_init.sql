@@ -1,8 +1,8 @@
 -- ========================================
--- 线上生鲜商场购物平台 - 数据库初始化（仅建表，零数据）
--- 单一脚本：覆盖原有 01/02/03
+-- 线上生鲜商场 - 数据库初始化（精简版，2026-07-11）
+-- 9 张表，覆盖用户端 + 商家端主链路
 -- 数据库：freshfood_shop
--- 测试账号通过 /api/v1/auth/register 自助创建（密码统一 BCrypt 加密存储，手动 INSERT 不便）
+-- 演示账号通过 /api/v1/auth/register 自助创建（密码统一 123456）
 -- ========================================
 
 CREATE DATABASE IF NOT EXISTS freshfood_shop
@@ -14,24 +14,18 @@ USE freshfood_shop;
 -- ============================================================
 -- 0. 先 DROP 所有表（按依赖反向）
 -- ============================================================
-DROP TABLE IF EXISTS `search_history`;
-DROP TABLE IF EXISTS `message`;
 DROP TABLE IF EXISTS `review`;
 DROP TABLE IF EXISTS `order_item`;
 DROP TABLE IF EXISTS `orders`;
-DROP TABLE IF EXISTS `address`;
 DROP TABLE IF EXISTS `cart`;
-DROP TABLE IF EXISTS `hot_word`;
-DROP TABLE IF EXISTS `banner`;
 DROP TABLE IF EXISTS `sku`;
 DROP TABLE IF EXISTS `product`;
 DROP TABLE IF EXISTS `category`;
-DROP TABLE IF EXISTS `admin`;
 DROP TABLE IF EXISTS `merchant`;
 DROP TABLE IF EXISTS `user`;
 
 -- ============================================================
--- 1. 账号表（3 张）
+-- 1. 账号表（2 张）
 -- ============================================================
 
 CREATE TABLE `user` (
@@ -58,7 +52,7 @@ CREATE TABLE `merchant` (
     `contact_name`   VARCHAR(255) DEFAULT NULL COMMENT '联系人（AES-256-CBC 加密）',
     `contact_phone`  VARCHAR(255) DEFAULT NULL COMMENT '联系电话（AES-256-CBC 加密）',
     `logo`           VARCHAR(255) DEFAULT NULL,
-    `audit_status`   TINYINT      NOT NULL DEFAULT 0 COMMENT '0 待审核 / 1 通过 / 2 拒绝',
+    `audit_status`   TINYINT      NOT NULL DEFAULT 1 COMMENT '0 待审核 / 1 通过 / 2 拒绝（演示数据默认通过）',
     `status`         TINYINT      NOT NULL DEFAULT 1,
     `create_time`    DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `update_time`    DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -67,21 +61,8 @@ CREATE TABLE `merchant` (
     UNIQUE KEY `uk_username` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='商家表';
 
-CREATE TABLE `admin` (
-    `id`          BIGINT       NOT NULL AUTO_INCREMENT,
-    `username`    VARCHAR(50)  NOT NULL,
-    `password`    VARCHAR(100) NOT NULL,
-    `nickname`    VARCHAR(50)  DEFAULT NULL,
-    `status`      TINYINT      NOT NULL DEFAULT 1,
-    `create_time` DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `update_time` DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `deleted`     TINYINT      NOT NULL DEFAULT 0,
-    PRIMARY KEY (`id`),
-    UNIQUE KEY `uk_username` (`username`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='管理员表';
-
 -- ============================================================
--- 2. 业务表
+-- 2. 商品域（3 张）
 -- ============================================================
 
 CREATE TABLE `category` (
@@ -134,33 +115,9 @@ CREATE TABLE `sku` (
     KEY `idx_product` (`product_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='商品 SKU';
 
-CREATE TABLE `banner` (
-    `id`          BIGINT       NOT NULL AUTO_INCREMENT,
-    `title`       VARCHAR(100) NOT NULL,
-    `image`       VARCHAR(255) NOT NULL,
-    `link_type`   VARCHAR(20)  NOT NULL DEFAULT 'NONE' COMMENT 'NONE/PRODUCT/CATEGORY/URL',
-    `link_target` VARCHAR(255) DEFAULT NULL,
-    `sort`        INT          NOT NULL DEFAULT 0,
-    `enabled`     TINYINT      NOT NULL DEFAULT 1,
-    `start_time`  DATETIME     DEFAULT NULL,
-    `end_time`    DATETIME     DEFAULT NULL,
-    `create_time` DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `update_time` DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `deleted`     TINYINT      NOT NULL DEFAULT 0,
-    PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='首页轮播';
-
-CREATE TABLE `hot_word` (
-    `id`           BIGINT       NOT NULL AUTO_INCREMENT,
-    `keyword`      VARCHAR(50)  NOT NULL,
-    `search_count` INT          NOT NULL DEFAULT 0,
-    `sort`         INT          NOT NULL DEFAULT 0,
-    `create_time`  DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `update_time`  DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `deleted`      TINYINT      NOT NULL DEFAULT 0,
-    PRIMARY KEY (`id`),
-    UNIQUE KEY `uk_keyword` (`keyword`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='热搜词';
+-- ============================================================
+-- 3. 交易域（3 张）
+-- ============================================================
 
 CREATE TABLE `cart` (
     `id`         BIGINT       NOT NULL AUTO_INCREMENT,
@@ -175,23 +132,6 @@ CREATE TABLE `cart` (
     KEY `idx_user` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='购物车';
 
-CREATE TABLE `address` (
-    `id`            BIGINT       NOT NULL AUTO_INCREMENT,
-    `user_id`       BIGINT       NOT NULL,
-    `receiver_name` VARCHAR(255) NOT NULL COMMENT '收件人（AES-256-CBC 加密）',
-    `phone`         VARCHAR(255) NOT NULL COMMENT '手机号（AES-256-CBC 加密）',
-    `province`      VARCHAR(50)  NOT NULL,
-    `city`          VARCHAR(50)  NOT NULL,
-    `district`      VARCHAR(50)  DEFAULT NULL,
-    `detail`        VARCHAR(255) NOT NULL,
-    `is_default`    TINYINT      NOT NULL DEFAULT 0,
-    `create_time`   DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `update_time`   DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `deleted`       TINYINT      NOT NULL DEFAULT 0,
-    PRIMARY KEY (`id`),
-    KEY `idx_user` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='收货地址';
-
 CREATE TABLE `orders` (
     `id`                BIGINT        NOT NULL AUTO_INCREMENT,
     `order_no`          VARCHAR(32)   NOT NULL COMMENT '业务订单号 yyyyMMdd+4位',
@@ -201,13 +141,17 @@ CREATE TABLE `orders` (
     `shipping_fee`      DECIMAL(10,2) NOT NULL DEFAULT 0,
     `discount_amount`   DECIMAL(10,2) NOT NULL DEFAULT 0,
     `payable_amount`    DECIMAL(10,2) NOT NULL,
-    `address_snapshot`  VARCHAR(2000) NOT NULL COMMENT 'JSON',
+    `receiver_name`     VARCHAR(255)  NOT NULL COMMENT '收货人（AES-256-CBC 加密）',
+    `receiver_phone`    VARCHAR(255)  NOT NULL COMMENT '收货电话（AES-256-CBC 加密）',
+    `receiver_address`  VARCHAR(255)  NOT NULL COMMENT '收货地址',
     `remark`            VARCHAR(500)  DEFAULT NULL,
-    `status`            TINYINT       NOT NULL DEFAULT 1 COMMENT '1待付/2待发/3待收/4待评/5完成/6售后/7取消',
+    `status`            TINYINT       NOT NULL DEFAULT 1 COMMENT '1待付/2待发/3待收/4完成/5取消',
     `expire_time`       DATETIME      DEFAULT NULL COMMENT '待付款过期时间',
     `pay_time`          DATETIME      DEFAULT NULL,
     `ship_time`         DATETIME      DEFAULT NULL,
     `confirm_time`      DATETIME      DEFAULT NULL,
+    `tracking_no`       VARCHAR(50)   DEFAULT NULL COMMENT '物流单号',
+    `carrier`           VARCHAR(20)   DEFAULT NULL COMMENT '物流公司',
     `pay_method`        VARCHAR(20)   DEFAULT NULL,
     `create_time`       DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `update_time`       DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -233,6 +177,10 @@ CREATE TABLE `order_item` (
     PRIMARY KEY (`id`),
     KEY `idx_order` (`order_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='订单明细';
+
+-- ============================================================
+-- 4. 评价域（1 张）
+-- ============================================================
 
 CREATE TABLE `review` (
     `id`               BIGINT       NOT NULL AUTO_INCREMENT,
@@ -260,33 +208,7 @@ CREATE TABLE `review` (
     KEY `idx_user` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='评价';
 
-CREATE TABLE `message` (
-    `id`         BIGINT       NOT NULL AUTO_INCREMENT,
-    `user_id`    BIGINT       NOT NULL,
-    `type`       VARCHAR(20)  NOT NULL COMMENT 'SYSTEM/ORDER/PROMO',
-    `title`      VARCHAR(100) NOT NULL,
-    `content`    VARCHAR(1000) NOT NULL,
-    `related_id` BIGINT       DEFAULT NULL,
-    `is_read`    TINYINT      NOT NULL DEFAULT 0,
-    `create_time` DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `update_time` DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `deleted`    TINYINT      NOT NULL DEFAULT 0,
-    PRIMARY KEY (`id`),
-    KEY `idx_user_read` (`user_id`, `is_read`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='消息';
-
-CREATE TABLE `search_history` (
-    `id`         BIGINT       NOT NULL AUTO_INCREMENT,
-    `user_id`    BIGINT       NOT NULL,
-    `keyword`    VARCHAR(100) NOT NULL,
-    `create_time` DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `update_time` DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `deleted`    TINYINT      NOT NULL DEFAULT 0,
-    PRIMARY KEY (`id`),
-    KEY `idx_user_time` (`user_id`, `create_time`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='搜索历史';
-
 -- ============================================================
--- 3. 建表完成
+-- 5. 建表完成
 -- ============================================================
-SELECT 'Schema initialized. 15 tables created.' AS status;
+SELECT 'Schema initialized (slim). 9 tables created.' AS status;

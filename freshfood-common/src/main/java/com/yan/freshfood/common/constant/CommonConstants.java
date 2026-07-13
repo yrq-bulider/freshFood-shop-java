@@ -8,11 +8,9 @@ public final class CommonConstants {
 
     public static final String ROLE_USER = "user";
     public static final String ROLE_MERCHANT = "merchant";
-    public static final String ROLE_ADMIN = "admin";
 
     public static final String TYPE_USER = "user";
     public static final String TYPE_MERCHANT = "merchant";
-    public static final String TYPE_ADMIN = "admin";
 
     public static final String DEFAULT_PASSWORD = "123456";
 }

@@ -1,10 +1,6 @@
 package com.yan.freshfood.app.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.yan.freshfood.admin.mapper.AdminMapper;
-import com.yan.freshfood.admin.service.AdminAuthService;
-import com.yan.freshfood.admin.vo.AdminLoginVO;
-import com.yan.freshfood.admin.vo.AdminVO;
 import com.yan.freshfood.app.service.UnifiedAuthService;
 import com.yan.freshfood.app.vo.UnifiedLoginVO;
 import com.yan.freshfood.common.exception.BusinessException;
@@ -13,13 +9,12 @@ import com.yan.freshfood.merchant.mapper.MerchantMapper;
 import com.yan.freshfood.merchant.service.MerchantAuthService;
 import com.yan.freshfood.merchant.vo.MerchantLoginVO;
 import com.yan.freshfood.merchant.vo.MerchantVO;
-import com.yan.freshfood.model.entity.AdminDO;
 import com.yan.freshfood.model.entity.MerchantDO;
 import com.yan.freshfood.model.entity.UserDO;
 import com.yan.freshfood.user.mapper.UserMapper;
 import com.yan.freshfood.user.service.AuthService;
 import com.yan.freshfood.user.vo.LoginVO;
-import com.yan.freshfood.user.vo.UserVO;
+import com.yan.freshfood.user.vo.UserProfileVO;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -45,10 +40,8 @@ class UnifiedAuthServiceImplTest {
 
     @Mock private UserMapper userMapper;
     @Mock private MerchantMapper merchantMapper;
-    @Mock private AdminMapper adminMapper;
     @Mock private AuthService userAuthService;
     @Mock private MerchantAuthService merchantAuthService;
-    @Mock private AdminAuthService adminAuthService;
 
     @InjectMocks private UnifiedAuthServiceImpl service;
 
@@ -72,21 +65,12 @@ class UnifiedAuthServiceImplTest {
         return m;
     }
 
-    private AdminDO adminDO(Long id, String username) {
-        AdminDO a = new AdminDO();
-        a.setId(id);
-        a.setUsername(username);
-        a.setStatus(1);
-        a.setCreateTime(LocalDateTime.now());
-        return a;
-    }
-
     @Test
     void login_userHits_returnsRoleUSER() {
         UserDO u = userDO(1L, "alice");
         when(userMapper.selectOne(any(LambdaQueryWrapper.class))).thenReturn(u);
 
-        UserVO uvo = new UserVO();
+        UserProfileVO uvo = new UserProfileVO();
         uvo.setId(1L);
         uvo.setUsername("alice");
         uvo.setNickname("Alice");
@@ -99,7 +83,6 @@ class UnifiedAuthServiceImplTest {
         assertNotNull(vo.getProfile());
         verify(userAuthService).doLogin(eq(u), eq("pwd"));
         verify(merchantAuthService, never()).doLogin(any(), any());
-        verify(adminAuthService, never()).doLogin(any(), any());
     }
 
     @Test
@@ -120,35 +103,15 @@ class UnifiedAuthServiceImplTest {
     }
 
     @Test
-    void login_userAndMerchantMiss_adminHits_returnsRoleADMIN() {
-        when(userMapper.selectOne(any(LambdaQueryWrapper.class))).thenReturn(null);
-        when(merchantMapper.selectOne(any(LambdaQueryWrapper.class))).thenReturn(null);
-        AdminDO a = adminDO(3L, "admin1");
-        when(adminMapper.selectOne(any(LambdaQueryWrapper.class))).thenReturn(a);
-
-        AdminVO avo = new AdminVO();
-        avo.setId(3L);
-        avo.setUsername("admin1");
-        when(adminAuthService.doLogin(eq(a), eq("pwd"))).thenReturn(new AdminLoginVO("tok-a", avo));
-
-        UnifiedLoginVO vo = service.login("admin1", "pwd");
-
-        assertEquals("ADMIN", vo.getRole());
-        assertEquals("tok-a", vo.getToken());
-    }
-
-    @Test
     void login_allMiss_throws1005() {
         when(userMapper.selectOne(any(LambdaQueryWrapper.class))).thenReturn(null);
         when(merchantMapper.selectOne(any(LambdaQueryWrapper.class))).thenReturn(null);
-        when(adminMapper.selectOne(any(LambdaQueryWrapper.class))).thenReturn(null);
 
         BusinessException ex = assertThrows(BusinessException.class,
                 () -> service.login("ghost", "pwd"));
         assertEquals(ErrorCode.LOGIN_FAILED.getCode(), ex.getCode());
         verify(userAuthService, never()).doLogin(any(), any());
         verify(merchantAuthService, never()).doLogin(any(), any());
-        verify(adminAuthService, never()).doLogin(any(), any());
     }
 
     @Test
@@ -162,7 +125,6 @@ class UnifiedAuthServiceImplTest {
                 () -> service.login("alice", "badpwd"));
         assertEquals(ErrorCode.LOGIN_FAILED.getCode(), ex.getCode());
         verify(merchantAuthService, never()).doLogin(any(), any());
-        verify(adminAuthService, never()).doLogin(any(), any());
     }
 
     @Test
@@ -172,7 +134,7 @@ class UnifiedAuthServiceImplTest {
         when(userMapper.selectOne(any(LambdaQueryWrapper.class))).thenReturn(u);
         when(merchantMapper.selectOne(any(LambdaQueryWrapper.class))).thenReturn(m);
 
-        UserVO uvo = new UserVO();
+        UserProfileVO uvo = new UserProfileVO();
         uvo.setId(1L);
         uvo.setUsername("dupe");
         when(userAuthService.doLogin(eq(u), eq("pwd"))).thenReturn(new LoginVO("tok-u", uvo));
